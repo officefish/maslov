@@ -4,7 +4,7 @@ import axios from 'axios'
 
 export interface IAlphaVintageOptions {
   symbol: string
-  interval: string
+  interval: '1min' | '5min' | '15min' | '30min' | '60min'
   adjusted: boolean
   extended_hours: boolean
   month: string

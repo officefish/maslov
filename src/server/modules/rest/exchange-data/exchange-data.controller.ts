@@ -6,6 +6,7 @@ import {
   //Body,
   Req,
   Res,
+  Query,
   //Put,
   //Delete
 } from '@nestjs/common'
@@ -23,6 +24,7 @@ import {
   AlphaVintageService,
   IAlphaVintageOptions,
 } from './alpha-vintage.service'
+import { AlphaVintageDto } from './exchange-data.schema'
 
 @Controller('data')
 @ApiTags('data')
@@ -57,16 +59,17 @@ export class ExchangeDataController {
 
   @Get('alpha-vintage/intraday')
   async getAlphaVintageIntraday(
-    @Req() request: FastifyRequest,
+    // @Req() request: FastifyRequest,
     @Res() reply: FastifyReply,
+    @Query() params: AlphaVintageDto,
   ) {
-    const symbol = request['symbol'] || 'IBM'
-    const interval = request['interfal']
-    const adjusted = request['adjusted'] || true
-    const extended_hours = request['extended_hours'] || true
-    const month = request['month'] || '2009-01'
-    const outputsize = request['outputsize'] || 'compact'
-    const datatype = request['datatype'] || 'json'
+    const symbol = params.symbol || 'IBM'
+    const interval = params.interval || '5min'
+    const adjusted = params.adjusted || true
+    const extended_hours = params.extended_hours || true
+    const month = params.month || '2009-01'
+    const outputsize = params.outputsize || 'compact'
+    const datatype = params.datatype || 'json'
     const options = {
       symbol,
       interval,
@@ -76,9 +79,10 @@ export class ExchangeDataController {
       outputsize,
       datatype,
     } satisfies IAlphaVintageOptions
+    //console.log(options)
     const response = await this.alphavintage.intraday({ options })
     const data = response.data
-    console.log(data)
+    //console.log(data)
     return data
       ? reply.code(201).send({ statusCode: 201, data })
       : reply.code(403).send({ statusCode: 401, message: '' })
