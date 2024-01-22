@@ -9,6 +9,11 @@ export {
   useUserProfileStore,
 } from './profile-settings-provider'
 
+export {
+  BackendAddressProvider,
+  useBackendAddressStore,
+} from './backend-address-provider'
+
 interface ProviderProps {
   themeProps: ThemeProviderProps | undefined
   designSystemProps?: DesignSystemProviderProps | undefined

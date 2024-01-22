@@ -23,6 +23,7 @@ import {
 } from './styled-header'
 
 import { DropdownArrow } from '@/client/components/ui/svg'
+import { useBackendAddressStore } from '@/client/providers'
 
 //import avatar from '@public/team-2-800x800.jpg'
 
@@ -34,6 +35,10 @@ const HeaderNavigation: FC = () => {
     e.preventDefault()
     router.push(href)
   }
+
+  const { host, port } = useBackendAddressStore()
+
+  console.log('headerNavigation: host: ' + host + ', port:' + port)
 
   const { user } = useUser()
   const { mode, setMode, modes } = useSystemColorSchemas()

@@ -65,7 +65,10 @@ class EnvironmentVariables {
   JWT_SALT_LENGTH: number
 
   @IsIP()
-  ROOT_DOMAIN: string
+  DEV_HOST: string
+
+  @IsIP()
+  PROD_HOST: string
 
   @IsNumber()
   ROOT_PORT: number
