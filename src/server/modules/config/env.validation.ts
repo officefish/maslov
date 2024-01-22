@@ -96,6 +96,9 @@ class EnvironmentVariables {
 
   @IsString()
   COVER_URL: string
+
+  @IsString()
+  ALPHA_VINTAGE_API_KEY: string
 }
 
 export function validate(config: Record<string, unknown>) {

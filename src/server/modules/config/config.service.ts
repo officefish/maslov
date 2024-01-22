@@ -36,4 +36,8 @@ export class AppConfigService {
   getCoverUrl(): string {
     return this.configService.get('COVER_URL')
   }
+
+  getAlphaVintageApiKey(): string {
+    return this.configService.get('ALPHA_VINTAGE_API_KEY')
+  }
 }
