@@ -153,3 +153,24 @@ model Tartan {
   hashed     String? 
   url        String? 
 }
+
+enum Provider {
+  ALPHA_VINTAGE
+}
+
+model ExchangeSegment {
+  id         String    @id @default(auto()) @map("_id") @db.ObjectId
+  provider   Provider     @default(ALPHA_VINTAGE)
+  date       DateTime
+  symbol     String
+  open       Float
+  close      Float 
+  low        Float
+  high       Float
+  volume     Int
+}
+
+model ExchangeSegmentHash {
+  id         String    @id @default(auto()) @map("_id") @db.ObjectId
+  value      String
+}
