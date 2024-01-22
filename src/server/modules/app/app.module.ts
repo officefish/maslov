@@ -12,7 +12,8 @@ import { AccessoryModule } from '@modules/accessory/accessory.module'
 import { AuthModule } from '@modules/rest/auth/auth.module'
 import { UserModule } from '@modules/rest/user/user.module'
 import { PostModule } from '@modules/rest/post/post.module'
-import { UploadModule } from '../rest/upload/upload.module'
+import { UploadModule } from '@modules/rest/upload/upload.module'
+import { ExchangeDataModule } from '@modules/rest/exchange-data/exchange-data.module'
 
 //import { ServeStaticModule } from '@nestjs/serve-static'
 //import { join } from 'path'
@@ -31,6 +32,7 @@ import { UploadModule } from '../rest/upload/upload.module'
     AuthModule,
     PostModule,
     UploadModule,
+    ExchangeDataModule,
     //RenderModule.forRootAsync(Next({})),
     //ServeStaticModule.forRoot({
     // eslint-disable-next-line @typescript-eslint/no-var-requires
