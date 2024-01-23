@@ -40,6 +40,7 @@ export const StyledProfileWrapper = tw.div`
 block 
 ml-[7%] 
 mr-[7%] 
+mt-[3%]
 md:ml-[15%] 
 md:mr-[15%]
 `
@@ -168,7 +169,7 @@ hover:dark:text-base-content-dark
 ${(p) => (p.$active ? 'btn-ghost' : 'btn-neutral')}
 `
 
-export const NewPostButton = tw.button`
+export const StyledButton = tw.button`
 btn btn-outline btn-primary gap-2
 `
 

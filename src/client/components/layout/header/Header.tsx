@@ -1,13 +1,8 @@
 import { FC, PropsWithChildren } from 'react'
 
-import { StyledHeader, HeaderOffset } from './styled-header'
+import { StyledHeader } from './styled-header'
 
 const Header: FC<PropsWithChildren> = ({ children }) => {
-  return (
-    <>
-      <StyledHeader>{children}</StyledHeader>
-      <HeaderOffset />
-    </>
-  )
+  return <StyledHeader>{children}</StyledHeader>
 }
 export default Header

@@ -1,7 +1,7 @@
 import { FC, MouseEvent, PropsWithChildren, useEffect, useState } from 'react'
 //import useOnlyWithUser from "@client/hooks/with-user-only"
 
-import { Cover, ProfileLayout, EditHeader } from '../components'
+import { Cover, EditHeader } from '../components'
 
 import BasicInfoSettings from './basic-info'
 import StatusSettings from './status'
@@ -13,6 +13,7 @@ import { useUserProfile } from '@client/services/user-profile.service'
 //const avatar = '/public/team-2-800x800.jpg'
 import VisualsSettings from './visuals'
 import { useUserProfileStore } from '@/client/providers'
+import EditProfileLayout from '../components/edit-profile.layout'
 //const background =
 //  'https://images.unsplash.com/photo-1499336315816-097655dcfbda'
 
@@ -105,7 +106,7 @@ const ProfileSettings: FC = () => {
     <>
       <div className="relative">
         <Cover background={userProfile?.cover?.imageUrl} />
-        <ProfileLayout avatar={userProfile?.avatar?.imageUrl}>
+        <EditProfileLayout avatar={userProfile?.avatar?.imageUrl}>
           <EditHeader />
           <Tabs>
             <TabItem
@@ -132,7 +133,7 @@ const ProfileSettings: FC = () => {
           </Tabs>
           {renderSettingsMode(settingsMode)}
           <div className="w-full h-2 bg-base-300 dark:bg-base-300-dark rounded-b-xl"></div>
-        </ProfileLayout>
+        </EditProfileLayout>
       </div>
     </>
   )
