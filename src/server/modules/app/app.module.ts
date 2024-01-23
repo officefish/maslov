@@ -14,6 +14,7 @@ import { UserModule } from '@modules/rest/user/user.module'
 import { PostModule } from '@modules/rest/post/post.module'
 import { UploadModule } from '@modules/rest/upload/upload.module'
 import { ExchangeDataModule } from '@modules/rest/exchange-data/exchange-data.module'
+import { WorkspaceModule } from '../rest/workspace/workspace.module'
 
 //import { ServeStaticModule } from '@nestjs/serve-static'
 //import { join } from 'path'
@@ -31,6 +32,7 @@ import { ExchangeDataModule } from '@modules/rest/exchange-data/exchange-data.mo
     UserModule,
     AuthModule,
     PostModule,
+    WorkspaceModule,
     UploadModule,
     ExchangeDataModule,
     //RenderModule.forRootAsync(Next({})),

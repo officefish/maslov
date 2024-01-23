@@ -55,9 +55,6 @@ export class UserController {
   ) {
     const { basicInfo, quote, domain, avatar, cover, tartan } = credentials
 
-    console.log('POST:: PROFILE')
-    console.log(credentials)
-
     // because of AuthGuard we have userId in FastifyRequest
     const id = request['userId']
     const user = await this.service.user({ id })
