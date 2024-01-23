@@ -8,6 +8,10 @@ export const StyledButton = tw.button`
 btn btn-outline btn-primary h-24 gap-2 uppercase
 `
 
+export const StyledReadyButton = tw.button`
+btn btn-outline btn-primary gap-2 uppercase
+`
+
 export const StyledCancelButton = tw.button`
 btn btn-outline btn-error gap-2 uppercase
 `
@@ -20,10 +24,13 @@ export const StyledDialog = tw.dialog`
 modal
 `
 
-export const StyledForm = tw.form`
+export const StyledModalBox = tw.div`
 !w-11/12 !max-w-5xl !h-[80%] 
 modal-box
 flex flex-col items-center justify-center
+`
+export const StyledForm = tw.form`
+card-body
 `
 
 export const StyledFormWrapper = tw.div`

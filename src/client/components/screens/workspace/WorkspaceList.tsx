@@ -3,14 +3,26 @@ import useGlobalOverflowHidden from '@client/hooks/force-overflow'
 
 import {
   StyledButton,
+  StyledReadyButton,
   StyledCancelButton,
   StyledWorkspace,
   StyledWorkspaceGrid,
   StyledDialog,
+  StyledModalBox,
   StyledForm,
   StyledFormWrapper,
   StyledFormHeader,
 } from './workspace.styled'
+
+import FormField from '@client/components/form/dev/field'
+import {
+  //RegisterOptions,
+  // FieldValues,
+  //UseFormRegisterReturn,
+  useForm,
+} from 'react-hook-form'
+import { z } from 'zod'
+import { zodResolver } from '@hookform/resolvers/zod'
 
 const WorkspacesList: FC = () => {
   const modalRef = useRef<HTMLDialogElement>(null)
@@ -31,11 +43,39 @@ const WorkspacesList: FC = () => {
 
   function cancelWorkspaceCration(e: MouseEvent<HTMLButtonElement>): void {
     e.preventDefault()
+    closeModal()
+    //throw new Error('Function not implemented.')
+  }
+
+  const closeModal = () => {
     if (modalRef && modalRef.current) {
       const modal = modalRef.current
       modal.close()
     }
-    //throw new Error('Function not implemented.')
+  }
+
+  const title = {
+    name: z
+      .string()
+      .min(7, { message: 'Must be 7 or more characters long' })
+      .max(24, { message: 'Must be 24 or less characters long' })
+      .optional(),
+  }
+
+  const schema = z.object({
+    ...title,
+  })
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: zodResolver(schema),
+  })
+
+  const submitHandler = () => {
+    closeModal()
   }
 
   return (
@@ -49,16 +89,22 @@ const WorkspacesList: FC = () => {
         </StyledButton>
       </StyledWorkspaceGrid>
       <StyledDialog ref={modalRef} onClose={onDialogClose}>
-        <StyledForm method="dialog">
+        <StyledModalBox>
           <StyledFormWrapper>
             <StyledFormHeader>New workspace</StyledFormHeader>
+            <StyledForm method="dialog">
+              <FormField title="Title" register={register} errors={errors} />
+            </StyledForm>
             <div>
+              <StyledReadyButton onClick={handleSubmit(submitHandler)}>
+                New Workspace
+              </StyledReadyButton>
               <StyledCancelButton onClick={cancelWorkspaceCration}>
                 Cancel
               </StyledCancelButton>
             </div>
           </StyledFormWrapper>
-        </StyledForm>
+        </StyledModalBox>
       </StyledDialog>
     </>
   )
