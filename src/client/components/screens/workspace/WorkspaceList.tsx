@@ -95,7 +95,7 @@ const WorkspacesList: FC = () => {
             <StyledForm method="dialog">
               <FormField title="Title" register={register} errors={errors} />
             </StyledForm>
-            <div>
+            <div className="h-[30%] m-8 flex">
               <StyledReadyButton onClick={handleSubmit(submitHandler)}>
                 New Workspace
               </StyledReadyButton>

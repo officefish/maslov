@@ -5,19 +5,19 @@ grid grid-cols-3 gap-4 min-h-full pt-4 ml-4 mr-4
 `
 
 export const StyledButton = tw.button`
-btn btn-outline btn-primary h-24 gap-2 uppercase
+btn btn-outline btn-accent h-24 gap-2 uppercase
 `
 
 export const StyledReadyButton = tw.button`
-btn btn-outline btn-primary gap-2 uppercase
+btn btn-outline btn-accent gap-2 uppercase flex-1 m-4 md:min-w-40
 `
 
 export const StyledCancelButton = tw.button`
-btn btn-outline btn-error gap-2 uppercase
+btn btn-outline btn-error gap-2 uppercase flex-1 m-4 md:min-w-40
 `
 
 export const StyledWorkspace = tw.button`
-btn btn-outline btn-secondary h-24 gap-2
+btn btn-outline btn-primary h-24 gap-2
 `
 
 export const StyledDialog = tw.dialog`
@@ -31,6 +31,7 @@ flex flex-col items-center justify-center
 `
 export const StyledForm = tw.form`
 card-body
+w-full sm:w-[90%] lg-[75%]
 `
 
 export const StyledFormWrapper = tw.div`
