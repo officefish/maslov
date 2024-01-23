@@ -3,6 +3,7 @@ import { NextPageWithLayout } from '@client/utilities/layout.types'
 import Layout from '@client/components/layout/Layout'
 import type { GetServerSideProps } from 'next'
 import { TokenProps } from '@client/utilities/form.types'
+import { BackendAddressProvider } from '@/client/providers'
 
 const PasswordResetPage: NextPageWithLayout<TokenProps> = ({
   email,
@@ -29,5 +30,9 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 }
 
 PasswordResetPage.getLayout = function getLayout(page: React.ReactElement) {
-  return <Layout title="Request Password.">{page}</Layout>
+  return (
+    <BackendAddressProvider>
+      <Layout title="Request Password.">{page}</Layout>
+    </BackendAddressProvider>
+  )
 }

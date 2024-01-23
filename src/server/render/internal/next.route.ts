@@ -28,6 +28,8 @@ export async function nextRoutes(app: INestApplication) {
   server.next('/auth/forgot-password')
   server.next('/auth/password-reset/*')
 
+  server.next('/workspaces')
+
   Logger.log('NEST endpoints register', 'Render')
 }
 
