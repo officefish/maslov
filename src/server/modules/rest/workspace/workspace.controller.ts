@@ -54,9 +54,11 @@ export class WorkspaceController {
         .code(401)
         .send({ statusCode: 401, message: 'User not found' })
     }
-    return this.service.workspaces({
+    const workspaces = await this.service.workspaces({
       where: { userId: user.id },
     })
+
+    return reply.code(201).send({ statusCode: 201, workspaces })
   }
 
   //   @Get('filtered-posts/:searchString')
