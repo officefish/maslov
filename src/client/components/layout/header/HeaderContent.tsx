@@ -11,12 +11,12 @@ const HeaderContent: FC = () => {
       <HeaderDescriptionWrapper>
         <Logo />
         <HeaderDescription $fontFamily="old-english">
-          <span>Blog</span>
+          <span>Site</span>
           <span className="hidden md:inline-flex md:ml-1">
-            about programming
+            about market trending
           </span>
           <span className="hidden xl:inline-flex xl:mx-1">
-            with software techies and
+            via special analytics
           </span>
           <Link
             className="hidden xl:inline-flex cursor-pointer huver:underline hover:text-cyan-500"

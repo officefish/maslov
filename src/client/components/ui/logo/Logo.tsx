@@ -17,12 +17,14 @@ const Logo: FC = () => {
       onClick={handleClick}
       className={`${styles.logo_wrapper} ${styles.sliced_wrapper}`}
     >
-      <div className={`${styles.logo_top} ${styles.sliced_top}`}>Techies.</div>
+      <div className={`${styles.logo_top} ${styles.sliced_top}`}>
+        Trend Navigator.
+      </div>
       <div
         className={`${styles.logo_bottom} ${styles.sliced_bottom}`}
         aria-hidden="true"
       >
-        Techies.
+        Trend Navigator.
       </div>
     </section>
   )
