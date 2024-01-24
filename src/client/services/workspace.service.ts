@@ -10,7 +10,7 @@ interface IWorkspaceListResponse {
   workspaces: IWorkspace[]
 }
 
-export function useUserWorkspaces() {
+export function useUserWorkspacesSWR() {
   const route = 'workspace'
   const key = `${API_PREFIX}/${route}`
 

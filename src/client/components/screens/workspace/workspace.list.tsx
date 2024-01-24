@@ -1,19 +1,12 @@
 import { FC, MouseEvent, useState } from 'react'
 
-import {
-  StyledButton,
-  StyledWorkspace,
-  StyledWorkspaceGrid,
-} from './workspace.styled'
-
 import useNewWorkspaceValidator from './components/dialog/validator'
 import NewWorkspaceDialog from './components/dialog'
-import { useUserWorkspaces } from '@/client/services/workspace.service'
+import { useUserWorkspacesSWR } from '@/client/services/workspace.service'
+import WorkspacesListGrid from './components/grid'
 
 const WorkspacesList: FC = () => {
-  /* body overflow: hidden style controller */
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { workspaces } = useUserWorkspaces()
+  const { workspaces } = useUserWorkspacesSWR()
   console.log(workspaces)
 
   const [isNewWorkspaceOpen, setIsNewWorkspaceOpen] = useState(false)
@@ -30,14 +23,10 @@ const WorkspacesList: FC = () => {
 
   return (
     <>
-      <StyledWorkspaceGrid>
-        <StyledWorkspace>IBM daily</StyledWorkspace>
-        <StyledWorkspace>AMAZON weekly</StyledWorkspace>
-        <StyledWorkspace>CISCO vs Huawey</StyledWorkspace>
-        <StyledButton onClick={showNewWorkspaceModal}>
-          Add workspace
-        </StyledButton>
-      </StyledWorkspaceGrid>
+      <WorkspacesListGrid
+        onClick={showNewWorkspaceModal}
+        workspaces={workspaces}
+      ></WorkspacesListGrid>
       <NewWorkspaceDialog
         errors={errors}
         handleSubmit={handleSubmit}
