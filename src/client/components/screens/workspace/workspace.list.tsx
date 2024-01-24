@@ -6,12 +6,15 @@ import {
   StyledWorkspaceGrid,
 } from './workspace.styled'
 
-import useNewWorkspaceValidator from './components/new-workspace-dialog/validator'
-import NewWorkspaceDialog from './components/new-workspace-dialog'
+import useNewWorkspaceValidator from './components/dialog/validator'
+import NewWorkspaceDialog from './components/dialog'
+import { useUserWorkspaces } from '@/client/services/workspace.service'
 
 const WorkspacesList: FC = () => {
   /* body overflow: hidden style controller */
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { workspaces } = useUserWorkspaces()
+  console.log(workspaces)
 
   const [isNewWorkspaceOpen, setIsNewWorkspaceOpen] = useState(false)
   const { register, handleSubmit, errors } = useNewWorkspaceValidator()
