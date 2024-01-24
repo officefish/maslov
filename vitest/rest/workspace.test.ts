@@ -143,6 +143,78 @@ describe('Workspace Service', () => {
     await destroyUser(userService, prisma, userData.email)
   })
 
+  test('Fail (POST) create new workspaces without JWT token', async () => {
+    const userData = generateNewUser()
+
+    /* Sure user not exist in db */
+    await checkUserNotExist(prisma, userData.email)
+
+    const userDataForDb = await makeUserInputData({ env, crypto, userData })
+    const user = await userService.createUser(userDataForDb)
+    expect(user).instanceOf(Object)
+
+    const title = 'IBM daily'
+
+    const response = await app
+      .getHttpAdapter()
+      .getInstance()
+      .inject()
+      .post(`${API_PREFIX}/workspace`)
+      .payload({ title })
+
+    expect(response.statusCode).toBe(401)
+    expect(response.headers['content-type']).toBe(jsonType)
+    const json = response.json()
+    expect(json).haveOwnProperty('statusCode')
+    expect(json).haveOwnProperty('message')
+    expect(json['statusCode'] == 401).toBe(true)
+    expect(json['message'] == 'Unauthorized').toBe(true)
+
+    await destroyUser(userService, prisma, userData.email)
+  })
+
+  test('Success (POST) new workspace for authorized user', async () => {
+    const userData = generateNewUser()
+
+    /* Sure user not exist in db */
+    await checkUserNotExist(prisma, userData.email)
+
+    const registerResponse = await app
+      .getHttpAdapter()
+      .getInstance()
+      .inject()
+      .post(`${API_PREFIX}/auth/sign-up`)
+      .payload(userData)
+
+    expect(registerResponse.statusCode).toBe(201)
+    expect(registerResponse.headers['content-type']).toBe(jsonType)
+    let json = registerResponse.json()
+    expect(json).haveOwnProperty('payload')
+    expect(json.payload).haveOwnProperty('accessToken')
+
+    const token = json?.payload?.accessToken || undefined
+    expect(token).toBeDefined()
+
+    const title = 'IBM daily'
+
+    const response = await app
+      .getHttpAdapter()
+      .getInstance()
+      .inject()
+      .post(`${API_PREFIX}/workspace`)
+      .payload({ title })
+      .headers({ authorization: `Bearer ${token}` })
+
+    expect(response.statusCode).toBe(201)
+    expect(response.headers['content-type']).toBe(jsonType)
+    json = response.json()
+    expectTypeOf(json).toBeObject()
+    expect(json).haveOwnProperty('statusCode')
+    expect(json.statusCode).toBe(201)
+
+    await destroyUser(userService, prisma, userData.email)
+  })
+
   afterAll(async () => {
     await app.getHttpServer().close()
   })

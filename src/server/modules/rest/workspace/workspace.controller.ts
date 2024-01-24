@@ -94,11 +94,23 @@ export class WorkspaceController {
         .code(401)
         .send({ statusCode: 401, message: 'User not found' })
     }
-    return this.service.createWorkspace({
+    const workspace = await this.service.createWorkspace({
       title,
       user: {
         connect: { id: user.id },
       },
+    })
+
+    if (!workspace) {
+      return reply.code(403).send({
+        statusCode: 403,
+        message: 'Bad request. Database error with workspace creation',
+      })
+    }
+
+    return reply.code(201).send({
+      statusCode: 201,
+      message: 'Creation done',
     })
   }
 

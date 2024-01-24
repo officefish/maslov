@@ -117,6 +117,10 @@ export class UserService {
       where: { userId: user.id },
     })
 
+    await this.prisma.workspace.deleteMany({
+      where: { userId: user.id },
+    })
+
     if (basicInfo) {
       await this.prisma.$transaction([
         this.prisma.fullName.delete({ where: { basicInfoId: basicInfo.id } }),
