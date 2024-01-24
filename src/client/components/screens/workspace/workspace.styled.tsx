@@ -8,7 +8,7 @@ export const StyledButton = tw.button`
 btn btn-outline btn-accent h-24 gap-2 uppercase
 `
 
-export const StyledReadyButton = tw.button`
+export const StyledReadyInput = tw.input`
 btn btn-outline btn-accent gap-2 uppercase flex-1 m-4 md:min-w-40
 `
 
@@ -29,7 +29,7 @@ export const StyledModalBox = tw.div`
 modal-box
 flex flex-col items-center justify-center
 `
-export const StyledForm = tw.form`
+export const StyledFormBody = tw.div`
 card-body
 w-full sm:w-[90%] lg-[75%]
 `

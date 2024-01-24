@@ -18,7 +18,7 @@ const WorkspacesListGrid: FC<IWorkspaceListGrid> = (props) => {
 
   return (
     <StyledWorkspaceGrid>
-      {workspaces.map((item, i) => (
+      {workspaces?.map((item, i) => (
         <WorkspacesListGridItem
           key={i}
           id={item.id}

@@ -9,11 +9,13 @@ import { zodResolver } from '@hookform/resolvers/zod'
 
 export default function useNewWorkspaceValidator() {
   const title = {
-    name: z
-      .string()
-      .min(7, { message: 'Must be 7 or more characters long' })
-      .max(24, { message: 'Must be 24 or less characters long' })
-      .optional(),
+    title: z
+      .string({
+        required_error: 'Password is required',
+        invalid_type_error: 'Password must be a string',
+      })
+      .min(2, { message: 'Must be 2 or more characters long' })
+      .max(24, { message: 'Must be 24 or less characters long' }),
   }
 
   const schema = z.object({

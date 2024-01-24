@@ -1,13 +1,16 @@
-import { FC, MouseEvent, useState } from 'react'
+import { FC, MouseEvent, useEffect, useState } from 'react'
 
 import useNewWorkspaceValidator from './components/dialog/validator'
 import NewWorkspaceDialog from './components/dialog'
 import { useUserWorkspacesSWR } from '@/client/services/workspace.service'
 import WorkspacesListGrid from './components/grid'
+import { useNewWorkspace } from '@/client/services/workspace.service'
 
 const WorkspacesList: FC = () => {
-  const { workspaces } = useUserWorkspacesSWR()
+  const { workspaces, trigger } = useUserWorkspacesSWR()
   console.log(workspaces)
+
+  const { onSubmit, serverError, data } = useNewWorkspace() // TODO: also need to process serverError
 
   const [isNewWorkspaceOpen, setIsNewWorkspaceOpen] = useState(false)
   const { register, handleSubmit, errors } = useNewWorkspaceValidator()
@@ -17,9 +20,16 @@ const WorkspacesList: FC = () => {
     setIsNewWorkspaceOpen(true)
   }
 
-  const submitHandler = () => {
-    setIsNewWorkspaceOpen(false)
-  }
+  useEffect(() => {
+    trigger()
+    if (data?.statusCode === 201) {
+      setIsNewWorkspaceOpen(false)
+    }
+    if (serverError) {
+      //setIsNewWorkspaceOpen(false)
+      console.log(serverError)
+    }
+  }, [data, serverError, setIsNewWorkspaceOpen, trigger])
 
   return (
     <>
@@ -34,7 +44,7 @@ const WorkspacesList: FC = () => {
         title={'New Workspace'}
         isOpen={isNewWorkspaceOpen}
         setIsOpen={setIsNewWorkspaceOpen}
-        submitHandler={submitHandler}
+        submitHandler={onSubmit}
       />
     </>
   )

@@ -32,7 +32,7 @@ function useHook_POST_RawData({
       .catch(() => {
         //console.log(e)
       })
-  }, [user])
+  }, [mutate, redirect, router, user])
   return { onSubmit, serverError }
 }
 

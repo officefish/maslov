@@ -1,6 +1,6 @@
-import { useAxiosFetcher_GET } from './axios.service'
+import { useAxiosFetcher_GET, useAxios_POST_RawData } from './axios.service'
 
-import useSWR from 'swr'
+import useSWRMutation from 'swr/mutation'
 import { IWorkspace } from '../models/workspace.types'
 
 const API_PREFIX = 'api/v1'
@@ -16,40 +16,26 @@ export function useUserWorkspacesSWR() {
 
   const { fetcher } = useAxiosFetcher_GET({ api: API_PREFIX, route })
 
-  const { data, error, isValidating, mutate } = useSWR<IWorkspaceListResponse>(
+  const { data, error, trigger } = useSWRMutation<IWorkspaceListResponse>(
     key,
     fetcher,
   )
 
-  return { workspaces: data.workspaces, error, isValidating, mutate }
+  return { workspaces: data?.workspaces, error, trigger }
 }
 
-// function useHook_POST_RawData({
-//   api = 'api/v1/',
-//   route = '/',
-// } = {}) {
-//   const {
-//     onSubmit,
-//     data: user,
-//     serverError,
-//   } = useAxios_POST_RawData<User>({
-//     api,
-//     route,
-//   })
-//   const router = useRouter()
-//   const { mutate } = useUser()
-//   useEffect(() => {
-//     if (!user) return
-//     mutate(user)
-//       .then(() => {
-//         router.push(redirect)
-//       })
-//       .catch(() => {
-//         //console.log(e)
-//       })
-//   }, [user])
-//   return { onSubmit, serverError }
-// }
+interface INewWorkspaceResponse {
+  statusCode: number
+}
 
-// export const useSignIn = () => useHook_POST_RawData({ route: 'sign-in' })
+function useHook_POST_RawData({ api = 'api/v1', route = 'workspace' } = {}) {
+  const { onSubmit, data, serverError } =
+    useAxios_POST_RawData<INewWorkspaceResponse>({
+      api,
+      route,
+    })
+  return { onSubmit, data, serverError }
+}
+
+export const useNewWorkspace = () => useHook_POST_RawData({})
 // export const useSignUp = () => useHook_POST_RawData({ route: 'sign-up' })

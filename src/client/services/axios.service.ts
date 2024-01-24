@@ -71,6 +71,7 @@ export function useAxios_POST_RawData<T>({
       .catch((error) => setServerError(error))
   }
   const onSubmit = async (data: any) => {
+    //console.log(data)
     const response = await request(data)
     return response
   }

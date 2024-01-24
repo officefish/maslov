@@ -2,7 +2,7 @@ import { createZodDto } from 'nestjs-zod'
 import { z } from 'nestjs-zod/z'
 
 const title = {
-  title: z.string().min(5).max(120).optional(),
+  title: z.string().min(2).max(24),
 }
 
 const CreateWorkspaceSchema = z.object({

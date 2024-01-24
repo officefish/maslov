@@ -2,11 +2,11 @@ import { FC, useRef, MouseEvent, useEffect } from 'react'
 import useGlobalOverflowHidden from '@client/hooks/force-overflow'
 
 import {
-  StyledReadyButton,
+  StyledReadyInput,
   StyledCancelButton,
   StyledDialog,
   StyledModalBox,
-  StyledForm,
+  StyledFormBody,
   StyledFormWrapper,
   StyledFormHeader,
 } from '../../workspace.styled'
@@ -54,17 +54,17 @@ const NewWorkspaceDialog: FC<NewWorkspaceDialogProps> = (props) => {
       <StyledModalBox>
         <StyledFormWrapper>
           <StyledFormHeader>{title}</StyledFormHeader>
-          <StyledForm method="dialog">
-            <FormField title="Title" register={register} errors={errors} />
-          </StyledForm>
-          <div className="h-[30%] m-8 flex">
-            <StyledReadyButton onClick={handleSubmit(submitHandler)}>
-              New Workspace
-            </StyledReadyButton>
-            <StyledCancelButton onClick={cancelWorkspaceCration}>
-              Cancel
-            </StyledCancelButton>
-          </div>
+          <form onSubmit={handleSubmit(submitHandler)}>
+            <StyledFormBody>
+              <FormField title="Title" register={register} errors={errors} />
+            </StyledFormBody>
+            <div className="h-[30%] m-8 flex">
+              <StyledReadyInput type="submit" value="New workspace" />
+              <StyledCancelButton onClick={cancelWorkspaceCration}>
+                Cancel
+              </StyledCancelButton>
+            </div>
+          </form>
         </StyledFormWrapper>
       </StyledModalBox>
     </StyledDialog>
