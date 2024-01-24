@@ -1,5 +1,4 @@
 import { FC, MouseEvent, useState } from 'react'
-import useGlobalOverflowHidden from '@client/hooks/force-overflow'
 
 import {
   StyledButton,
@@ -7,13 +6,12 @@ import {
   StyledWorkspaceGrid,
 } from './workspace.styled'
 
-import useNewWorkspaceValidator from './components/new-workspace.validator'
-import NewWorkspaceDialog from './components/new-workspace.dialog'
+import useNewWorkspaceValidator from './components/new-workspace-dialog/validator'
+import NewWorkspaceDialog from './components/new-workspace-dialog'
 
 const WorkspacesList: FC = () => {
   /* body overflow: hidden style controller */
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [isOverflowHidden, setIsOverflowHidden] = useGlobalOverflowHidden()
 
   const [isNewWorkspaceOpen, setIsNewWorkspaceOpen] = useState(false)
   const { register, handleSubmit, errors } = useNewWorkspaceValidator()

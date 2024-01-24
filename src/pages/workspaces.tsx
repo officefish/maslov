@@ -2,7 +2,7 @@
 import { NextPageWithLayout } from '@client/utilities/layout.types'
 import Layout from '@client/components/layout/Layout'
 import Providers, { BackendAddressProvider } from '@client/providers'
-import WorkspacesList from '@client/components/screens/workspace/WorkspaceList'
+import WorkspacesList from '@/client/components/screens/workspace/workspace.list'
 
 const WorkspacesPage: NextPageWithLayout = () => {
   return <WorkspacesList />

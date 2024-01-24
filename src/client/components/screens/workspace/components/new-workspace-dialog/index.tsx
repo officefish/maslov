@@ -9,7 +9,7 @@ import {
   StyledForm,
   StyledFormWrapper,
   StyledFormHeader,
-} from '../workspace.styled'
+} from '../../workspace.styled'
 
 import FormField from '@client/components/form/dev/field'
 import { FormProps } from '@/client/utilities/form.types'
