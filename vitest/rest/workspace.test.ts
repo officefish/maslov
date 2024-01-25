@@ -215,6 +215,71 @@ describe('Workspace Service', () => {
     await destroyUser(userService, prisma, userData.email)
   })
 
+  test('Success (GET) exist workspace by id', async () => {
+    const userData = generateNewUser()
+
+    /* Sure user not exist in db */
+    await checkUserNotExist(prisma, userData.email)
+
+    const registerResponse = await app
+      .getHttpAdapter()
+      .getInstance()
+      .inject()
+      .post(`${API_PREFIX}/auth/sign-up`)
+      .payload(userData)
+
+    expect(registerResponse.statusCode).toBe(201)
+    expect(registerResponse.headers['content-type']).toBe(jsonType)
+    let json = registerResponse.json()
+    expect(json).haveOwnProperty('payload')
+    expect(json.payload).haveOwnProperty('accessToken')
+
+    const token = json?.payload?.accessToken || undefined
+    expect(token).toBeDefined()
+
+    const title = 'IBM daily'
+
+    let response = await app
+      .getHttpAdapter()
+      .getInstance()
+      .inject()
+      .post(`${API_PREFIX}/workspace`)
+      .payload({ title })
+      .headers({ authorization: `Bearer ${token}` })
+
+    expect(response.statusCode).toBe(201)
+    expect(response.headers['content-type']).toBe(jsonType)
+    json = response.json()
+    expectTypeOf(json).toBeObject()
+    expect(json).haveOwnProperty('statusCode')
+    expect(json.statusCode).toBe(201)
+    expect(json).haveOwnProperty('id')
+
+    const id = json.id
+    response = await app
+      .getHttpAdapter()
+      .getInstance()
+      .inject()
+      .get(`${API_PREFIX}/workspace/${id}`)
+      .headers({ authorization: `Bearer ${token}` })
+
+    expect(response.statusCode).toBe(201)
+    expect(response.headers['content-type']).toBe(jsonType)
+    json = response.json()
+    expectTypeOf(json).toBeObject()
+    expect(json).haveOwnProperty('statusCode')
+    expect(json.statusCode).toBe(201)
+    console.log(json)
+    expect(json).haveOwnProperty('payload')
+    const payload = json.payload
+    expectTypeOf(payload).toBeObject()
+    expect(payload).haveOwnProperty('title')
+    expect(payload).haveOwnProperty('date')
+    expect(payload.title === title).toBe(true)
+
+    await destroyUser(userService, prisma, userData.email)
+  })
+
   afterAll(async () => {
     await app.getHttpServer().close()
   })

@@ -1,7 +1,7 @@
 import {
   Controller,
   Get,
-  //Param,
+  Param,
   Post,
   Body,
   Req,
@@ -111,16 +111,47 @@ export class WorkspaceController {
     return reply.code(201).send({
       statusCode: 201,
       message: 'Creation done',
+      id: workspace.id,
     })
   }
 
-  // @Put('publish/:id')
-  // async publishPost(@Param('id') id: string): Promise<PostModel> {
-  //   return this.service.updatePost({
-  //     where: { id: Number(id) },
-  //     data: { published: true },
-  //   })
-  // }
+  @UseGuards(AuthGuard)
+  @Get('/:id')
+  async getWorkspace(
+    @Res() reply: FastifyReply,
+    @Req() request: FastifyRequest,
+    @Param('id') id: string,
+    //@Body() credentials: GetWorkspaceDto,
+  ) {
+    const userId = request['userId']
+    const user = await this.userService.user({ id: userId })
+
+    if (!user) {
+      return reply
+        .code(401)
+        .send({ statusCode: 401, message: 'User not found' })
+    }
+
+    // workspace id
+    const workspace = await this.service.workspace({ id })
+    if (!workspace) {
+      return reply.code(403).send({
+        statusCode: 403,
+        message: 'Bad request. Database error with workspace',
+      })
+    }
+
+    const payload = {
+      //widgets: workspace.
+      date: workspace.updatedAt ?? workspace.createdAt,
+      title: workspace.title,
+    }
+
+    return reply.code(201).send({
+      statusCode: 201,
+      payload,
+    })
+  }
 
   // @Delete('post/:id')
   // async deletePost(@Param('id') id: string): Promise<PostModel> {
