@@ -29,6 +29,7 @@ export async function nextRoutes(app: INestApplication) {
   server.next('/auth/password-reset/*')
 
   server.next('/workspaces')
+  server.next('/workspace/[:id]')
 
   Logger.log('NEST endpoints register', 'Render')
 }

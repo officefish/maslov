@@ -8,7 +8,6 @@ import { useNewWorkspace } from '@/client/services/workspace.service'
 
 const WorkspacesList: FC = () => {
   const { workspaces, trigger } = useUserWorkspacesSWR()
-  console.log(workspaces)
 
   const { onSubmit, serverError, data } = useNewWorkspace() // TODO: also need to process serverError
 

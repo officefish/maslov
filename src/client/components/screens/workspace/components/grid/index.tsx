@@ -3,6 +3,7 @@ import { FC, MouseEvent } from 'react'
 import { StyledButton, StyledWorkspaceGrid } from '../../workspace.styled'
 import { IWorkspace } from '@/client/models/workspace.types'
 import WorkspacesListGridItem from './item'
+import { useRouter } from 'next/router'
 
 interface IWorkspaceListGrid {
   workspaces: IWorkspace[]
@@ -12,8 +13,11 @@ interface IWorkspaceListGrid {
 const WorkspacesListGrid: FC<IWorkspaceListGrid> = (props) => {
   const { workspaces, onClick } = props
 
+  const router = useRouter()
+
   const onWorkspaceSelect = (workspaceId: string) => {
-    console.log(workspaceId)
+    //console.log(workspaceId)
+    router.push(`/workspace/${workspaceId}`)
   }
 
   return (
