@@ -10,9 +10,15 @@ interface IWorkspaceListResponse {
   workspaces: IWorkspace[]
 }
 
+interface IWidget {
+  workspaceId: string
+  id: string
+}
+
 interface IWorkspacePayload {
   title: string
   date: number
+  widgets: IWidget[]
 }
 interface IWorkspaceResponse {
   statusCode: string

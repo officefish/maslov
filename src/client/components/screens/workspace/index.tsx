@@ -8,6 +8,7 @@ import {
 } from '@/client/services/workspace.service'
 import { StyledButtonWidget } from './workspace.styled'
 import NewWidgetDialog from './components/dialog/new-widget'
+import WidgetList from './components/grid/widget'
 //import WorkspacesListGrid from './components/grid'
 //import { useNewWorkspace } from '@/client/services/workspace.service'
 
@@ -72,7 +73,7 @@ const Workspace: FC<IWorkspaceProps> = (props) => {
         </span>
       </div>
       <div>
-        <span>Widgets Grid</span>
+        <WidgetList widgets={workspaceData?.widgets} />
         <StyledButtonWidget onClick={showNewWidgetModal}>
           New widget
         </StyledButtonWidget>

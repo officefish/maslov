@@ -3,7 +3,7 @@ import { FC, MouseEvent, useEffect, useState } from 'react'
 import { useNewWorkspaceValidator } from './components/dialog/validator'
 import NewWorkspaceDialog from './components/dialog/new-workspace'
 import { useUserWorkspacesSWR } from '@/client/services/workspace.service'
-import WorkspacesListGrid from './components/grid'
+import WorkspacesListGrid from './components/grid/workspace'
 import { useNewWorkspace } from '@/client/services/workspace.service'
 
 const WorkspacesList: FC = () => {

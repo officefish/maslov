@@ -141,10 +141,17 @@ export class WorkspaceController {
       })
     }
 
+    const widgets = await this.service.widgets({
+      where: { workspaceId: workspace.id },
+    })
+
+    console.log(widgets)
+
     const payload = {
       //widgets: workspace.
       date: workspace.updatedAt ?? workspace.createdAt,
       title: workspace.title,
+      widgets,
     }
 
     return reply.code(201).send({

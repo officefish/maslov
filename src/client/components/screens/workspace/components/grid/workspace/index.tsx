@@ -1,6 +1,6 @@
 import { FC, MouseEvent } from 'react'
 
-import { StyledButton, StyledWorkspaceGrid } from '../../workspace.styled'
+import { StyledButton, StyledWorkspaceGrid } from '../../../workspace.styled'
 import { IWorkspace } from '@/client/models/workspace.types'
 import WorkspacesListGridItem from './item'
 import { useRouter } from 'next/router'

@@ -4,7 +4,7 @@ import {
   //StyledButton,
   StyledWorkspace,
   //StyledWorkspaceGrid,
-} from '../../workspace.styled'
+} from '../../../workspace.styled'
 import { IWorkspace } from '@/client/models/workspace.types'
 
 interface IWorkspaceListItem extends IWorkspace {
