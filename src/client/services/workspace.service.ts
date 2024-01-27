@@ -10,6 +10,15 @@ interface IWorkspaceListResponse {
   workspaces: IWorkspace[]
 }
 
+interface IWorkspacePayload {
+  title: string
+  date: number
+}
+interface IWorkspaceResponse {
+  statusCode: string
+  payload: IWorkspacePayload
+}
+
 export function useUserWorkspacesSWR() {
   const route = 'workspace'
   const key = `${API_PREFIX}/${route}`
@@ -22,6 +31,20 @@ export function useUserWorkspacesSWR() {
   )
 
   return { workspaces: data?.workspaces, error, trigger }
+}
+
+export function useWorkspaceDataSWR(workspaceId: string) {
+  const route = `workspace/${workspaceId}`
+  const key = `${API_PREFIX}/${route}`
+
+  const { fetcher } = useAxiosFetcher_GET({ api: API_PREFIX, route })
+
+  const { data, error, trigger } = useSWRMutation<IWorkspaceResponse>(
+    key,
+    fetcher,
+  )
+
+  return { data: data?.payload, trigger, error }
 }
 
 interface INewWorkspaceResponse {

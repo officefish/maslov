@@ -8,6 +8,10 @@ export const StyledButton = tw.button`
 btn btn-outline btn-accent h-24 gap-2 uppercase
 `
 
+export const StyledButtonWidget = tw.button`
+btn btn-outline btn-primary gap-2
+`
+
 export const StyledReadyInput = tw.input`
 btn btn-outline btn-accent gap-2 uppercase flex-1 m-4 md:min-w-40
 `

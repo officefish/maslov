@@ -2,18 +2,12 @@ import { NextPageWithLayout } from '@client/utilities/layout.types'
 import Layout from '@client/components/layout/Layout'
 import Providers, { BackendAddressProvider } from '@client/providers'
 import { GetServerSideProps } from 'next'
-
-interface IWorkspaceProps {
-  id: string
-}
+import Workspace, {
+  IWorkspaceProps,
+} from '@/client/components/screens/workspace'
 
 const WorkspacePage: NextPageWithLayout<IWorkspaceProps> = (props) => {
-  const { id } = props
-  return (
-    <h1 className="text-base-content dark:text-base-content-dark text-lg">
-      {id}
-    </h1>
-  )
+  return <Workspace id={props.id} />
 }
 export default WorkspacePage
 
