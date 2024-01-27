@@ -145,8 +145,6 @@ export class WorkspaceController {
       where: { workspaceId: workspace.id },
     })
 
-    console.log(widgets)
-
     const payload = {
       //widgets: workspace.
       date: workspace.updatedAt ?? workspace.createdAt,

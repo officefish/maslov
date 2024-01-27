@@ -6,6 +6,12 @@ import { Widget, Prisma } from '@prisma/client'
 export class WidgetService {
   constructor(private prisma: PrismaService) {}
 
+  async widget(where: Prisma.WidgetWhereUniqueInput): Promise<Widget | null> {
+    return this.prisma.widget.findUnique({
+      where,
+    })
+  }
+
   async widgets(params: {
     skip?: number
     take?: number

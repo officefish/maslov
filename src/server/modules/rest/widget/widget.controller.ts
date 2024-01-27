@@ -1,7 +1,7 @@
 import {
   Controller,
-  //Get,
-  //Param,
+  Get,
+  Param,
   Post,
   Body,
   Req,
@@ -35,6 +35,43 @@ export class WidgetController {
     private readonly workspaceService: WorkspaceService,
     private readonly userService: UserService,
   ) {}
+
+  @UseGuards(AuthGuard)
+  @Get('/:id')
+  async getWidget(
+    @Res() reply: FastifyReply,
+    @Req() request: FastifyRequest,
+    @Param('id') id: string,
+    //@Body() credentials: GetWorkspaceDto,
+  ) {
+    const userId = request['userId']
+    const user = await this.userService.user({ id: userId })
+
+    if (!user) {
+      return reply
+        .code(401)
+        .send({ statusCode: 401, message: 'User not found' })
+    }
+
+    const widget = await this.service.widget({ id })
+
+    if (!widget) {
+      return reply
+        .code(401)
+        .send({ statusCode: 401, message: 'Widget not found' })
+    }
+
+    const payload = {
+      //widgets: workspace.
+      api_function: widget.function,
+      options: widget.options,
+    }
+
+    return reply.code(201).send({
+      statusCode: 201,
+      payload,
+    })
+  }
 
   @UseGuards(AuthGuard)
   @Post('/')
