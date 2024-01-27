@@ -2,7 +2,10 @@ import { FC, MouseEvent, useEffect, useState } from 'react'
 
 import { useNewWidgetValidator } from './components/dialog/validator'
 //import NewWorkspaceDialog from './components/dialog'
-import { useWorkspaceDataSWR } from '@/client/services/workspace.service'
+import {
+  useNewWidget,
+  useWorkspaceDataSWR,
+} from '@/client/services/workspace.service'
 import { StyledButtonWidget } from './workspace.styled'
 import NewWidgetDialog from './components/dialog/new-widget'
 //import WorkspacesListGrid from './components/grid'
@@ -14,7 +17,7 @@ export interface IWorkspaceProps {
 
 const Workspace: FC<IWorkspaceProps> = (props) => {
   const { id } = props
-  const { data, trigger, error } = useWorkspaceDataSWR(id)
+  const { workspaceData, trigger, error } = useWorkspaceDataSWR(id)
   const [isValid, setIsValid] = useState(false)
 
   const [isNewWidgetOpen, setIsNewWidgetOpen] = useState(false)
@@ -25,6 +28,8 @@ const Workspace: FC<IWorkspaceProps> = (props) => {
     setIsNewWidgetOpen(true)
   }
 
+  const { onSubmit, serverError, data: newWidgetResponse } = useNewWidget() // TODO: also need to process serverError
+
   useEffect(() => {
     if (!isValid) {
       trigger()
@@ -33,20 +38,37 @@ const Workspace: FC<IWorkspaceProps> = (props) => {
     if (error) {
       console.log('Network error with workspace data')
     }
-  }, [data, error, trigger, isValid, setIsValid])
 
-  const onSubmitMiddleware = (data) => {
-    console.log(data)
+    if (serverError) {
+      console.log(serverError)
+    }
+    if (newWidgetResponse) {
+      console.log(newWidgetResponse)
+      if (newWidgetResponse?.statusCode === 201) {
+        setIsNewWidgetOpen(false)
+      }
+    }
+  }, [error, trigger, isValid, setIsValid, serverError, newWidgetResponse])
+
+  const onSubmitMiddleware = (middlewareData) => {
+    const options = JSON.stringify(middlewareData)
+    const responseData = {
+      api_function: 'intraday',
+      workspaceId: id,
+      options,
+    }
+    console.log(responseData)
+    onSubmit(responseData)
   }
 
   return (
     <>
       <div>
         <span className="text-base-content dark:text-base-content-dark">
-          {data?.title}
+          {workspaceData?.title}
         </span>
         <span className="text-base-content dark:text-base-content-dark">
-          {data?.date}
+          {workspaceData?.date}
         </span>
       </div>
       <div>

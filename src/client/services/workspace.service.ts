@@ -44,7 +44,7 @@ export function useWorkspaceDataSWR(workspaceId: string) {
     fetcher,
   )
 
-  return { data: data?.payload, trigger, error }
+  return { workspaceData: data?.payload, trigger, error }
 }
 
 interface INewWorkspaceResponse {
@@ -60,5 +60,9 @@ function useHook_POST_RawData({ api = 'api/v1', route = 'workspace' } = {}) {
   return { onSubmit, data, serverError }
 }
 
-export const useNewWorkspace = () => useHook_POST_RawData({})
+export const useNewWorkspace = () =>
+  useHook_POST_RawData({ route: 'workspace' })
+
+export const useNewWidget = () => useHook_POST_RawData({ route: 'widget' })
+
 // export const useSignUp = () => useHook_POST_RawData({ route: 'sign-up' })
