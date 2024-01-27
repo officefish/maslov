@@ -46,12 +46,14 @@ const Workspace: FC<IWorkspaceProps> = (props) => {
     if (newWidgetResponse) {
       console.log(newWidgetResponse)
       if (newWidgetResponse?.statusCode === 201) {
+        setIsValid(false)
         setIsNewWidgetOpen(false)
       }
     }
   }, [error, trigger, isValid, setIsValid, serverError, newWidgetResponse])
 
   const onSubmitMiddleware = (middlewareData) => {
+    middlewareData['interval'] = '5min'
     const options = JSON.stringify(middlewareData)
     const responseData = {
       api_function: 'intraday',
@@ -59,6 +61,7 @@ const Workspace: FC<IWorkspaceProps> = (props) => {
       options,
     }
     console.log(responseData)
+    setIsValid(false)
     onSubmit(responseData)
   }
 

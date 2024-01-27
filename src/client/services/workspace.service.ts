@@ -15,6 +15,11 @@ interface IWidget {
   id: string
 }
 
+interface IWidgetData {
+  api_function: string
+  options?: string
+}
+
 interface IWorkspacePayload {
   title: string
   date: number
@@ -23,6 +28,16 @@ interface IWorkspacePayload {
 interface IWorkspaceResponse {
   statusCode: string
   payload: IWorkspacePayload
+}
+
+interface IWidgetPayload {
+  api_function: string
+  options?: string
+}
+
+interface IWidgetResponse {
+  statusCode: string
+  payload: IWidgetPayload
 }
 
 export function useUserWorkspacesSWR() {
@@ -51,6 +66,44 @@ export function useWorkspaceDataSWR(workspaceId: string) {
   )
 
   return { workspaceData: data?.payload, trigger, error }
+}
+
+export function useWidgetDataSWR(widgetId: string) {
+  const route = `widget/${widgetId}`
+  const key = `${API_PREFIX}/${route}`
+
+  const { fetcher } = useAxiosFetcher_GET({ api: API_PREFIX, route })
+
+  const { data, error, trigger } = useSWRMutation<IWidgetResponse>(key, fetcher)
+
+  return { widgetData: data?.payload, trigger, error }
+}
+
+export function useProviderDataSWR(widgetData: IWidgetData) {
+  const route = `data/alpha-vintage/${widgetData?.api_function}`
+  const key = `${API_PREFIX}/${route}`
+
+  const options = {
+    headers: {
+      'Content-Type': 'application/json',
+      'Access-Control-Allow-Credentials': true,
+    },
+    withCredentials: true,
+    params: widgetData?.options ? JSON.parse(widgetData.options) : {},
+  }
+
+  const { fetcher } = useAxiosFetcher_GET({ api: API_PREFIX, route, options })
+
+  const { data, error, trigger } = useSWRMutation<IWorkspaceResponse>(
+    key,
+    fetcher,
+  )
+
+  return {
+    providerData: data?.payload,
+    providerTrigger: trigger,
+    providerError: error,
+  }
 }
 
 interface INewWorkspaceResponse {
