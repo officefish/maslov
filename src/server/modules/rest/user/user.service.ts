@@ -117,6 +117,16 @@ export class UserService {
       where: { userId: user.id },
     })
 
+    const workspaces = await this.prisma.workspace.findMany({
+      where: { userId: user.id },
+    })
+
+    for (const workspace of workspaces) {
+      await this.prisma.widget.deleteMany({
+        where: { workspaceId: workspace.id },
+      })
+    }
+
     await this.prisma.workspace.deleteMany({
       where: { userId: user.id },
     })

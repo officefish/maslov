@@ -269,7 +269,6 @@ describe('Workspace Service', () => {
     expectTypeOf(json).toBeObject()
     expect(json).haveOwnProperty('statusCode')
     expect(json.statusCode).toBe(201)
-    console.log(json)
     expect(json).haveOwnProperty('payload')
     const payload = json.payload
     expectTypeOf(payload).toBeObject()
@@ -279,6 +278,8 @@ describe('Workspace Service', () => {
 
     await destroyUser(userService, prisma, userData.email)
   })
+
+  /* no auth widget */
 
   afterAll(async () => {
     await app.getHttpServer().close()

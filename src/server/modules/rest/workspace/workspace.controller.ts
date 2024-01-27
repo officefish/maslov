@@ -24,7 +24,7 @@ import { AuthGuard } from '../auth/auth.guard'
 
 import { FastifyRequest, FastifyReply } from 'fastify'
 import { UserService } from '../user/user.service'
-import { CreateWorkspaceDto } from './workspace.schema'
+import { CreateWidgetDto, CreateWorkspaceDto } from './workspace.schema'
 
 @ApiTags('workspace')
 @Controller('workspace')
@@ -157,4 +157,53 @@ export class WorkspaceController {
   // async deletePost(@Param('id') id: string): Promise<PostModel> {
   //   return this.service.deletePost({ id: Number(id) })
   // }
+
+  @UseGuards(AuthGuard)
+  @Post('/:id/widget')
+  async createWidget(
+    @Req() request: FastifyRequest,
+    @Res() reply: FastifyReply,
+    @Body() credentials: CreateWidgetDto,
+    @Param('id') id: string,
+  ): Promise<Workspace> {
+    const { api_function, options } = credentials
+
+    const userId = request['userId']
+    const user = await this.userService.user({ id: userId })
+
+    if (!user) {
+      return reply
+        .code(401)
+        .send({ statusCode: 401, message: 'User not found' })
+    }
+
+    const workspace = await this.service.workspace({ id })
+    if (!workspace) {
+      return reply.code(403).send({
+        statusCode: 403,
+        message: 'Bad request. Database error. No workspace found.',
+      })
+    }
+
+    const widget = await this.service.createWidget({
+      function: api_function,
+      options: options,
+      workspace: {
+        connect: { id: workspace.id },
+      },
+    })
+
+    if (!widget) {
+      return reply.code(403).send({
+        statusCode: 403,
+        message: 'Bad request. Database error with widget creation',
+      })
+    }
+
+    return reply.code(201).send({
+      statusCode: 201,
+      message: 'Widget creation done',
+      id: widget.id,
+    })
+  }
 }

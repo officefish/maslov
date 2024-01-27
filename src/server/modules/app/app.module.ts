@@ -15,6 +15,7 @@ import { PostModule } from '@modules/rest/post/post.module'
 import { UploadModule } from '@modules/rest/upload/upload.module'
 import { ExchangeDataModule } from '@modules/rest/exchange-data/exchange-data.module'
 import { WorkspaceModule } from '../rest/workspace/workspace.module'
+import { WidgetModule } from '../rest/widget/widget.module'
 
 //import { ServeStaticModule } from '@nestjs/serve-static'
 //import { join } from 'path'
@@ -32,9 +33,10 @@ import { WorkspaceModule } from '../rest/workspace/workspace.module'
     UserModule,
     AuthModule,
     PostModule,
-    WorkspaceModule,
     UploadModule,
     ExchangeDataModule,
+    WorkspaceModule,
+    WidgetModule,
     //RenderModule.forRootAsync(Next({})),
     //ServeStaticModule.forRoot({
     // eslint-disable-next-line @typescript-eslint/no-var-requires
