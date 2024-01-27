@@ -9,17 +9,17 @@ import {
   StyledFormBody,
   StyledFormWrapper,
   StyledFormHeader,
-} from '../../workspace.styled'
+} from '../../../workspace.styled'
 
 import FormField from '@client/components/form/dev/field'
 import { FormProps } from '@/client/utilities/form.types'
 
-interface NewWorkspaceDialogProps extends FormProps {
+interface NewWidgetDialogProps extends FormProps {
   isOpen: boolean
   setIsOpen: (status: boolean) => void
 }
 
-const NewWorkspaceDialog: FC<NewWorkspaceDialogProps> = (props) => {
+const NewWidgetDialog: FC<NewWidgetDialogProps> = (props) => {
   const modalRef = useRef<HTMLDialogElement>(null)
 
   const {
@@ -37,7 +37,7 @@ const NewWorkspaceDialog: FC<NewWorkspaceDialogProps> = (props) => {
   const [isOverflowHidden, setIsOverflowHidden] = useGlobalOverflowHidden()
   const onDialogClose = () => setIsOverflowHidden(false)
 
-  function cancelWorkspaceCration(e: MouseEvent<HTMLButtonElement>): void {
+  function cancelWidgetCration(e: MouseEvent<HTMLButtonElement>): void {
     e.preventDefault()
     setIsOpen(false)
   }
@@ -56,11 +56,11 @@ const NewWorkspaceDialog: FC<NewWorkspaceDialogProps> = (props) => {
           <StyledFormHeader>{title}</StyledFormHeader>
           <form onSubmit={handleSubmit(submitHandler)}>
             <StyledFormBody>
-              <FormField title="Title" register={register} errors={errors} />
+              <FormField title="Symbol" register={register} errors={errors} />
             </StyledFormBody>
             <div className="h-[30%] m-8 flex">
-              <StyledReadyInput type="submit" value="New workspace" />
-              <StyledCancelButton onClick={cancelWorkspaceCration}>
+              <StyledReadyInput type="submit" value="New widget" />
+              <StyledCancelButton onClick={cancelWidgetCration}>
                 Cancel
               </StyledCancelButton>
             </div>
@@ -70,4 +70,4 @@ const NewWorkspaceDialog: FC<NewWorkspaceDialogProps> = (props) => {
     </StyledDialog>
   )
 }
-export default NewWorkspaceDialog
+export default NewWidgetDialog

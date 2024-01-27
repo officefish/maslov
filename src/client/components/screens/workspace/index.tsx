@@ -1,9 +1,10 @@
 import { FC, MouseEvent, useEffect, useState } from 'react'
 
-//import useNewWorkspaceValidator from './components/dialog/validator'
+import { useNewWidgetValidator } from './components/dialog/validator'
 //import NewWorkspaceDialog from './components/dialog'
 import { useWorkspaceDataSWR } from '@/client/services/workspace.service'
 import { StyledButtonWidget } from './workspace.styled'
+import NewWidgetDialog from './components/dialog/new-widget'
 //import WorkspacesListGrid from './components/grid'
 //import { useNewWorkspace } from '@/client/services/workspace.service'
 
@@ -16,6 +17,14 @@ const Workspace: FC<IWorkspaceProps> = (props) => {
   const { data, trigger, error } = useWorkspaceDataSWR(id)
   const [isValid, setIsValid] = useState(false)
 
+  const [isNewWidgetOpen, setIsNewWidgetOpen] = useState(false)
+  const { register, handleSubmit, errors } = useNewWidgetValidator()
+
+  const showNewWidgetModal = (e: MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault()
+    setIsNewWidgetOpen(true)
+  }
+
   useEffect(() => {
     if (!isValid) {
       trigger()
@@ -25,6 +34,10 @@ const Workspace: FC<IWorkspaceProps> = (props) => {
       console.log('Network error with workspace data')
     }
   }, [data, error, trigger, isValid, setIsValid])
+
+  const onSubmitMiddleware = (data) => {
+    console.log(data)
+  }
 
   return (
     <>
@@ -37,9 +50,20 @@ const Workspace: FC<IWorkspaceProps> = (props) => {
         </span>
       </div>
       <div>
-        {/* <!-- --> */}
+        <span>Widgets Grid</span>
+        <StyledButtonWidget onClick={showNewWidgetModal}>
+          New widget
+        </StyledButtonWidget>
       </div>
-      <StyledButtonWidget>New widget</StyledButtonWidget>
+      <NewWidgetDialog
+        errors={errors}
+        handleSubmit={handleSubmit}
+        register={register}
+        title={'New Widget'}
+        isOpen={isNewWidgetOpen}
+        setIsOpen={setIsNewWidgetOpen}
+        submitHandler={onSubmitMiddleware}
+      />
       {/* <h1 className="text-base-content dark:text-base-content-dark text-lg">
         {id}
       </h1> */}
