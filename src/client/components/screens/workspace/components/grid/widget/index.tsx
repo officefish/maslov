@@ -15,7 +15,7 @@ const WidgetList: FC<IWidgetListGrid> = (props) => {
   const { widgets } = props
 
   return (
-    <div className="w-full flex flex-col">
+    <div className="w-full flex flex-col items-center">
       {widgets?.map((item, i) => <Widget key={i} id={item.id} />)}
     </div>
   )

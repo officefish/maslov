@@ -1,4 +1,7 @@
 import tw from 'tailwind-styled-components'
+interface IsActive {
+  $active?: boolean
+}
 
 export const StyledWorkspaceGrid = tw.div`
 grid grid-cols-3 gap-4 min-h-full pt-4 ml-4 mr-4
@@ -54,4 +57,9 @@ bg-accent
 text-accent-content
 dark:bg-accent-dark
 dark-text-accent-content-dark
+`
+
+export const WidgetTab = tw.button<IsActive>`
+tab 
+${(p) => (p.$active ? 'tab-active' : '')}
 `

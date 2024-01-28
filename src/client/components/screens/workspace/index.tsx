@@ -75,7 +75,7 @@ const Workspace: FC<IWorkspaceProps> = (props) => {
           {workspaceData?.date}
         </span>
       </div>
-      <div>
+      <div className="w-full">
         <WidgetList widgets={workspaceData?.widgets} />
         <StyledButtonWidget onClick={showNewWidgetModal}>
           New widget
