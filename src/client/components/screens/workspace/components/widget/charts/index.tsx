@@ -1,11 +1,13 @@
 import { FC, useMemo } from 'react'
-import { ISeries, ISlot } from '@/client/models/exchange.types'
+//import { ISeries, ISlot } from '@/client/models/exchange.types'
 //import { AxisOptions, Chart } from 'react-charts'
 import dynamic from 'next/dynamic'
 
 const Chart = dynamic(() => import('react-charts').then((mod) => mod.Chart), {
   ssr: false,
 })
+
+import { UserSerie } from 'react-charts'
 
 // const AxisOptions = dynamic(
 //   () => import('react-charts').then((mod) => mod.options),
@@ -14,7 +16,7 @@ const Chart = dynamic(() => import('react-charts').then((mod) => mod.Chart), {
 //   })
 
 interface IWidgetCharts {
-  data: ISeries[]
+  data: UserSerie<unknown>[]
 }
 
 const WidgetCharts: FC<IWidgetCharts> = (props) => {
@@ -22,7 +24,7 @@ const WidgetCharts: FC<IWidgetCharts> = (props) => {
 
   const primaryAxis = useMemo(
     () => ({
-      getValue: (datum: ISlot) => datum.date,
+      getValue: (datum) => datum.primary || datum.date,
     }),
     [],
   )
@@ -30,7 +32,7 @@ const WidgetCharts: FC<IWidgetCharts> = (props) => {
   const secondaryAxes = useMemo(
     () => [
       {
-        getValue: (datum: ISlot) => datum.close,
+        getValue: (datum) => datum.secondary,
       },
     ],
     [],

@@ -4,7 +4,7 @@ import {
 } from '@/client/services/workspace.service'
 import { FC, useState, useEffect } from 'react'
 
-import { Slot, ISlot, ISeries } from '@/client/models/exchange.types'
+import { Slot, ISlot } from '@/client/models/exchange.types'
 import WidgetTable from './table'
 
 // <FontAwesomeIcon icon="fa-solid fa-square-root-variable" />
@@ -16,6 +16,7 @@ interface IWidget {
 import { ViewMode } from './types'
 import WidgetTabs from './tabs'
 import WidgetCharts from './charts'
+import useChartConfig from '@/client/services/chart.service'
 
 const getRandomSlot = (): ISlot => {
   const slot = new Slot()
@@ -29,12 +30,12 @@ const getRandomSlot = (): ISlot => {
 }
 
 const fakeSlots: ISlot[] = new Array(20).fill(getRandomSlot())
-const series = [
-  {
-    label: 'IBM',
-    data: fakeSlots,
-  },
-] satisfies ISeries[]
+// const series = [
+//   {
+//     label: 'IBM',
+//     data: fakeSlots,
+//   },
+// ] satisfies ISeries[]
 
 const Widget: FC<IWidget> = (props) => {
   const { id } = props
@@ -45,6 +46,11 @@ const Widget: FC<IWidget> = (props) => {
   const [mode, setMode] = useState<ViewMode>(ViewMode.TABLE)
 
   const [providerData, setProviderData] = useState<Slot[]>()
+
+  const { data: chartData } = useChartConfig({
+    series: 2,
+    dataType: 'time',
+  })
   //const { providerData, providerTrigger, providerError } =
   //useProviderDataSWR(widgetData)
 
@@ -108,7 +114,7 @@ const Widget: FC<IWidget> = (props) => {
         <WidgetTabs mode={mode} setMode={setMode} />
       </div>
       {mode === ViewMode.TABLE && <WidgetTable data={providerData} />}
-      {mode === ViewMode.CHART && <WidgetCharts data={series} />}
+      {mode === ViewMode.CHART && <WidgetCharts data={chartData} />}
     </div>
   )
 }
