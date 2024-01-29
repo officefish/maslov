@@ -8,13 +8,7 @@ const Chart = dynamic(() => import('react-charts').then((mod) => mod.Chart), {
 })
 
 import { UserSerie } from 'react-charts'
-
-// const AxisOptions = dynamic(
-//   () => import('react-charts').then((mod) => mod.options),
-//   {
-//     ssr: false,
-//   })
-
+//import { ISlot } from '@/client/models/exchange.types'
 interface IWidgetCharts {
   data: UserSerie<unknown>[]
 }
@@ -24,7 +18,7 @@ const WidgetCharts: FC<IWidgetCharts> = (props) => {
 
   const primaryAxis = useMemo(
     () => ({
-      getValue: (datum) => datum.primary || datum.date,
+      getValue: (datum) => datum.primary ?? datum.date,
     }),
     [],
   )
@@ -32,14 +26,14 @@ const WidgetCharts: FC<IWidgetCharts> = (props) => {
   const secondaryAxes = useMemo(
     () => [
       {
-        getValue: (datum) => datum.secondary,
+        getValue: (datum) => datum.secondary ?? datum.close,
       },
     ],
     [],
   )
 
   return (
-    <div className="w-full h-36">
+    <div className="w-full h-96">
       <Chart
         options={{
           data,

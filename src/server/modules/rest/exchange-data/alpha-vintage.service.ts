@@ -70,7 +70,7 @@ export class AlphaVintageService {
       datatype = 'json',
     } = options
 
-    return this.getFakeDaily()
+    return { data: this.getFakeDaily()} 
 
     // const params = {
     //   function: 'TIME_SERIES_INTRADAY',

@@ -110,7 +110,7 @@ export class ExchangeDataController {
       datatype,
     } satisfies IAlphaVintageMinOptions
     //console.log(options)
-    const response = await this.alphavintage.intraday({ options: { symbol: options.symbol} })
+    const response = await this.alphavintage.daily({ options: { symbol: options.symbol} })
     const data = response.data
     //console.log(data)
     return data

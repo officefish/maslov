@@ -1,13 +1,16 @@
 import { FC } from 'react'
-import { ISlot } from '@/client/models/exchange.types'
+//import { ISlot } from '@/client/models/exchange.types'
 import WidgetTableItem from './item'
+import { UserSerie } from 'react-charts'
+import { ISlot } from '@/client/models/exchange.types'
 
 interface IWidgetTable {
-  data: ISlot[]
+  data: UserSerie<unknown>[]
 }
-
 const WidgetTable: FC<IWidgetTable> = (props) => {
   const { data } = props
+
+  const sliced = data[0].data.slice(0, 24)
 
   return (
     <div className="overflow-x-auto pt-4">
@@ -22,7 +25,9 @@ const WidgetTable: FC<IWidgetTable> = (props) => {
           </tr>
         </thead>
         <tbody>
-          {data?.map((item, i) => <WidgetTableItem key={i} data={item} />)}
+          {sliced?.map((item: ISlot, i) => (
+            <WidgetTableItem key={i} data={item} />
+          ))}
         </tbody>
       </table>
     </div>
