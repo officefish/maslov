@@ -15,3 +15,8 @@ export class Slot implements ISlot {
   low: number
   volume: number
 }
+
+export interface ISeries {
+  label: string
+  data: ISlot[]
+}

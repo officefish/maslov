@@ -2,18 +2,9 @@ import {
   //useProviderDataSWR,
   useWidgetDataSWR,
 } from '@/client/services/workspace.service'
-import { FC, useState, useEffect, MouseEvent } from 'react'
-import WidgetTableItem from './item'
+import { FC, useState, useEffect } from 'react'
 
-import { WidgetTab } from '../../workspace.styled'
-
-import { Slot, ISlot } from '@/client/models/exchange.types'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import {
-  faChartPie,
-  faTable,
-  faSquareRootVariable,
-} from '@fortawesome/free-solid-svg-icons'
+import { Slot, ISlot, ISeries } from '@/client/models/exchange.types'
 import WidgetTable from './table'
 
 // <FontAwesomeIcon icon="fa-solid fa-square-root-variable" />
@@ -22,11 +13,9 @@ interface IWidget {
   id: string
 }
 
-enum ViewMode {
-  FUNCTION = 'function',
-  TABLE = 'table',
-  CHART = 'chart',
-}
+import { ViewMode } from './types'
+import WidgetTabs from './tabs'
+import WidgetCharts from './charts'
 
 const getRandomSlot = (): ISlot => {
   const slot = new Slot()
@@ -39,7 +28,13 @@ const getRandomSlot = (): ISlot => {
   return slot
 }
 
-const fakeSlots = new Array(20).fill(getRandomSlot()) satisfies ISlot[]
+const fakeSlots: ISlot[] = new Array(20).fill(getRandomSlot())
+const series = [
+  {
+    label: 'IBM',
+    data: fakeSlots,
+  },
+] satisfies ISeries[]
 
 const Widget: FC<IWidget> = (props) => {
   const { id } = props
@@ -62,13 +57,13 @@ const Widget: FC<IWidget> = (props) => {
       console.log('Network error with widget data')
     }
 
-    const fetchData = async () => {
-      const { symbol, interval } = JSON.parse(widgetData?.options)
-      const response = await fetch(
-        `http://localhost:8001/api/v1/data/alpha-vintage/intraday?symbol=${symbol}&interval=${interval}`,
-      )
-      return await response.json()
-    }
+    // const fetchData = async () => {
+    //   const { symbol, interval } = JSON.parse(widgetData?.options)
+    //   const response = await fetch(
+    //     `http://localhost:8001/api/v1/data/alpha-vintage/intraday?symbol=${symbol}&interval=${interval}`,
+    //   )
+    //   return await response.json()
+    // }
 
     if (widgetData) {
       //fetchData().then((response) => {
@@ -103,10 +98,6 @@ const Widget: FC<IWidget> = (props) => {
     //providerError,
   ])
 
-  const onFunctionClick = () => setMode(ViewMode.FUNCTION)
-  const onChartClick = () => setMode(ViewMode.CHART)
-  const onTableClick = () => setMode(ViewMode.TABLE)
-
   return (
     <div className="w-full md:w-[80%] card card-normal bg-base-300 dark:bg-base-300-dark shadow-xl flex flex-col items-center p-4">
       <div className="text-sm text-primary dark:text-primary-dark">
@@ -114,32 +105,10 @@ const Widget: FC<IWidget> = (props) => {
       </div>
       <div className="flex flex-row justify-between w-full h-16 items-center">
         <div>Provider fields</div>
-
-        <div role="tablist" className="tabs tabs-boxed">
-          <WidgetTab
-            $active={mode === ViewMode.FUNCTION}
-            role="tab"
-            onClick={onFunctionClick}
-          >
-            <FontAwesomeIcon icon={faSquareRootVariable} />
-          </WidgetTab>
-          <WidgetTab
-            $active={mode === ViewMode.CHART}
-            role="tab"
-            onClick={onChartClick}
-          >
-            <FontAwesomeIcon icon={faChartPie} />
-          </WidgetTab>
-          <WidgetTab
-            $active={mode === ViewMode.TABLE}
-            role="tab"
-            onClick={onTableClick}
-          >
-            <FontAwesomeIcon icon={faTable} />
-          </WidgetTab>
-        </div>
+        <WidgetTabs mode={mode} setMode={setMode} />
       </div>
-      {mode === ViewMode.TABLE && <WidgetTable slots={providerData} />}
+      {mode === ViewMode.TABLE && <WidgetTable data={providerData} />}
+      {mode === ViewMode.CHART && <WidgetCharts data={series} />}
     </div>
   )
 }

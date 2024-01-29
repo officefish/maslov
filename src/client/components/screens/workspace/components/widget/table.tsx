@@ -3,11 +3,11 @@ import { ISlot } from '@/client/models/exchange.types'
 import WidgetTableItem from './item'
 
 interface IWidgetTable {
-  slots: ISlot[]
+  data: ISlot[]
 }
 
 const WidgetTable: FC<IWidgetTable> = (props) => {
-  const { slots } = props
+  const { data } = props
 
   return (
     <div className="overflow-x-auto pt-4">
@@ -22,7 +22,7 @@ const WidgetTable: FC<IWidgetTable> = (props) => {
           </tr>
         </thead>
         <tbody>
-          {slots?.map((item, i) => <WidgetTableItem key={i} data={item} />)}
+          {data?.map((item, i) => <WidgetTableItem key={i} data={item} />)}
         </tbody>
       </table>
     </div>
