@@ -21,6 +21,15 @@ enum Datatype {
   SCV = 'scv',
 }
 
+const AlphaVintageMinSchema = z.object({
+  symbol: z.string(),
+  adjusted: z.boolean().optional(),
+  extended_hours: z.boolean().optional(),
+  month: z.string().optional(),
+  outputsize: z.nativeEnum(OutputSize).optional(),
+  datatype: z.nativeEnum(Datatype).optional(),
+})
+
 const AlphaVintageSchema = z.object({
   symbol: z.string(),
   interval: z.nativeEnum(IntervalMinutes),
@@ -31,4 +40,6 @@ const AlphaVintageSchema = z.object({
   datatype: z.nativeEnum(Datatype).optional(),
 })
 
+
+export class AlphaVintageMinDto extends createZodDto(AlphaVintageMinSchema) {}
 export class AlphaVintageDto extends createZodDto(AlphaVintageSchema) {}

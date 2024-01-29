@@ -23,8 +23,9 @@ import {
 import {
   AlphaVintageService,
   IAlphaVintageOptions,
+  IAlphaVintageMinOptions,
 } from './alpha-vintage.service'
-import { AlphaVintageDto } from './exchange-data.schema'
+import { AlphaVintageDto, AlphaVintageMinDto } from './exchange-data.schema'
 
 @Controller('data')
 @ApiTags('data')
@@ -81,6 +82,35 @@ export class ExchangeDataController {
     } satisfies IAlphaVintageOptions
     //console.log(options)
     const response = await this.alphavintage.intraday({ options })
+    const data = response.data
+    //console.log(data)
+    return data
+      ? reply.code(201).send({ statusCode: 201, data })
+      : reply.code(403).send({ statusCode: 401, message: '' })
+  }
+
+  @Get('alpha-vintage/daily')
+  async getAlphaVintageDaily(
+    // @Req() request: FastifyRequest,
+    @Res() reply: FastifyReply,
+    @Query() params: AlphaVintageMinDto,
+  ) {
+    const symbol = params.symbol || 'IBM'
+    const adjusted = params.adjusted || true
+    const extended_hours = params.extended_hours || true
+    const month = params.month || '2009-01'
+    const outputsize = params.outputsize || 'compact'
+    const datatype = params.datatype || 'json'
+    const options = {
+      symbol,
+      adjusted,
+      extended_hours,
+      month,
+      outputsize,
+      datatype,
+    } satisfies IAlphaVintageMinOptions
+    //console.log(options)
+    const response = await this.alphavintage.intraday({ options: { symbol: options.symbol} })
     const data = response.data
     //console.log(data)
     return data
