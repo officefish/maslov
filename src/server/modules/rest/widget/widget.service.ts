@@ -34,4 +34,14 @@ export class WidgetService {
       data,
     })
   }
+
+  async updateWidget(
+    where: Prisma.WidgetWhereUniqueInput,
+    data: Prisma.WidgetUpdateInput,
+  ): Promise<Widget> {
+    return this.prisma.widget.update({
+      where,
+      data,
+    })
+  }
 }

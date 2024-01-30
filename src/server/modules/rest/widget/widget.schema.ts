@@ -11,4 +11,11 @@ const CreateWidgetSchema = z.object({
   options: z.string().optional(),
 })
 
+const UpdateWidgetSchema = z.object({
+  id: z.string(),
+  api_function: z.string(),
+  options: z.string().optional(),
+})
+
 export class CreateWidgetDto extends createZodDto(CreateWidgetSchema) {}
+export class UpdateWidgetDto extends createZodDto(UpdateWidgetSchema) {}

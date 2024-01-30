@@ -24,7 +24,7 @@ import { AuthGuard } from '../auth/auth.guard'
 
 import { FastifyRequest, FastifyReply } from 'fastify'
 import { UserService } from '../user/user.service'
-import { CreateWidgetDto } from './widget.schema'
+import { CreateWidgetDto, UpdateWidgetDto } from './widget.schema'
 import { WorkspaceService } from '../workspace/workspace.service'
 
 @ApiTags('widget')
@@ -117,6 +117,47 @@ export class WidgetController {
     return reply.code(201).send({
       statusCode: 201,
       message: 'Widget creation done',
+      id: widget.id,
+    })
+  }
+
+  @UseGuards(AuthGuard)
+  @Post('/update')
+  async updateWidget(
+    @Req() request: FastifyRequest,
+    @Res() reply: FastifyReply,
+    @Body() credentials: UpdateWidgetDto,
+  ): Promise<Widget> {
+    const { api_function, options, id } = credentials
+
+    const userId = request['userId']
+    const user = await this.userService.user({ id: userId })
+
+    if (!user) {
+      return reply
+        .code(401)
+        .send({ statusCode: 401, message: 'User not found' })
+    }
+
+    const data = {
+      function: api_function,
+      options: options,
+    }
+    const where = { id }
+    const widget = await this.service.updateWidget(where, data)
+
+    console.log(widget)
+
+    if (!widget) {
+      return reply.code(403).send({
+        statusCode: 403,
+        message: 'Bad request. Database error with widget update',
+      })
+    }
+
+    return reply.code(201).send({
+      statusCode: 201,
+      message: 'Widget success updated',
       id: widget.id,
     })
   }
