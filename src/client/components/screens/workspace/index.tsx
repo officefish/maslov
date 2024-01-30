@@ -1,14 +1,14 @@
 import { FC, MouseEvent, useEffect, useState } from 'react'
 
-import { useNewWidgetValidator } from './components/dialog/validator'
+import { useUpsetWidgetValidator } from './components/dialog/validator'
 //import NewWorkspaceDialog from './components/dialog'
 import {
   useNewWidget,
   useWorkspaceDataSWR,
 } from '@/client/services/workspace.service'
 import { StyledButtonWidget } from './workspace.styled'
-import NewWidgetDialog from './components/dialog/new-widget'
 import WidgetList from './components/grid/widget'
+import UpsetWidgetDialog from './components/dialog/upset-widget'
 //import WorkspacesListGrid from './components/grid'
 //import { useNewWorkspace } from '@/client/services/workspace.service'
 
@@ -21,12 +21,12 @@ const Workspace: FC<IWorkspaceProps> = (props) => {
   const { workspaceData, trigger, error } = useWorkspaceDataSWR(id)
   const [isValid, setIsValid] = useState(false)
 
-  const [isNewWidgetOpen, setIsNewWidgetOpen] = useState(false)
-  const { register, handleSubmit, errors } = useNewWidgetValidator()
+  const [isUpsetWidgetOpen, setIsUpsetWidgetOpen] = useState(false)
+  const { register, handleSubmit, errors } = useUpsetWidgetValidator()
 
-  const showNewWidgetModal = (e: MouseEvent<HTMLButtonElement>) => {
+  const showUpsetWidgetModal = (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault()
-    setIsNewWidgetOpen(true)
+    setIsUpsetWidgetOpen(true)
   }
 
   const { onSubmit, serverError, data: newWidgetResponse } = useNewWidget() // TODO: also need to process serverError
@@ -47,7 +47,7 @@ const Workspace: FC<IWorkspaceProps> = (props) => {
       console.log(newWidgetResponse)
       if (newWidgetResponse?.statusCode === 201) {
         setIsValid(false)
-        setIsNewWidgetOpen(false)
+        setIsUpsetWidgetOpen(false)
       }
     }
   }, [error, trigger, isValid, setIsValid, serverError, newWidgetResponse])
@@ -77,17 +77,17 @@ const Workspace: FC<IWorkspaceProps> = (props) => {
       </div>
       <div className="w-full">
         <WidgetList widgets={workspaceData?.widgets} />
-        <StyledButtonWidget onClick={showNewWidgetModal}>
+        <StyledButtonWidget onClick={showUpsetWidgetModal}>
           New widget
         </StyledButtonWidget>
       </div>
-      <NewWidgetDialog
+      <UpsetWidgetDialog
         errors={errors}
         handleSubmit={handleSubmit}
         register={register}
         title={'New Widget'}
-        isOpen={isNewWidgetOpen}
-        setIsOpen={setIsNewWidgetOpen}
+        isOpen={isUpsetWidgetOpen}
+        setIsOpen={setIsUpsetWidgetOpen}
         submitHandler={onSubmitMiddleware}
       />
       {/* <h1 className="text-base-content dark:text-base-content-dark text-lg">

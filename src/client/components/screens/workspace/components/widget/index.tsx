@@ -1,11 +1,13 @@
 import {
+  useUpdateWidget,
   //useProviderDataSWR,
   useWidgetDataSWR,
 } from '@/client/services/workspace.service'
-import { FC, useState, useEffect } from 'react'
+import { FC, useState, useEffect, MouseEvent } from 'react'
 
 //import { Slot, ISlot } from '@/client/models/exchange.types'
 import WidgetTable from './table'
+import { faChartSimple } from '@fortawesome/free-solid-svg-icons'
 
 import { parser } from '@/client/services/parser/alpha-vintage'
 
@@ -20,6 +22,10 @@ import WidgetTabs from './tabs'
 import WidgetCharts from './charts'
 import useChartConfig from '@/client/services/chart.service'
 import { UserSerie } from 'react-charts'
+import { useUpsetWidgetValidator } from '../dialog/validator'
+import { StyledButtonWidget } from '../../workspace.styled'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import UpdateWidgetDialog from '../dialog/upset-widget'
 
 // const series = [
 //   {
@@ -100,18 +106,57 @@ const Widget: FC<IWidget> = (props) => {
     //providerError,
   ])
 
+  const [isUpsetWidgetOpen, setIsUpsetWidgetOpen] = useState(false)
+  const { register, handleSubmit, errors } = useUpsetWidgetValidator()
+
+  const showUpsetWidgetModal = (e: MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault()
+    setIsUpsetWidgetOpen(true)
+  }
+
+  const { onSubmit, serverError, data: updateWidgetResponse } = useUpdateWidget()
+
+  const onSubmitMiddleware = (middlewareData) => {
+    middlewareData['interval'] = '5min'
+    const options = JSON.stringify(middlewareData)
+    const responseData = {
+      api_function: 'intraday',
+      widgetId: id,
+      options,
+    }
+    //console.log(responseData)
+    //setIsValid(false)
+    onSubmit(responseData)
+  }
+
   return (
-    <div className="w-full md:w-[80%] card card-normal bg-base-300 dark:bg-base-300-dark shadow-xl flex flex-col items-center p-4">
-      <div className="text-sm text-primary dark:text-primary-dark">
-        Alpha-Vintage provider
+    <>
+      <div className="w-full md:w-[80%] card card-normal bg-base-300 dark:bg-base-300-dark shadow-xl flex flex-col items-center p-4">
+        <div className="text-sm text-primary dark:text-primary-dark">
+          Alpha-Vintage provider
+        </div>
+        <div className="flex flex-row justify-between w-full h-16 items-center">
+          <div>
+            <StyledButtonWidget onClick={showUpsetWidgetModal}>
+              <FontAwesomeIcon icon={faChartSimple} />
+              IBM | Daily
+            </StyledButtonWidget>
+          </div>
+          <WidgetTabs mode={mode} setMode={setMode} />
+        </div>
+        {mode === ViewMode.TABLE && <WidgetTable data={providerData} />}
+        {mode === ViewMode.CHART && <WidgetCharts data={providerData} />}
       </div>
-      <div className="flex flex-row justify-between w-full h-16 items-center">
-        <div>Provider fields</div>
-        <WidgetTabs mode={mode} setMode={setMode} />
-      </div>
-      {mode === ViewMode.TABLE && <WidgetTable data={providerData} />}
-      {mode === ViewMode.CHART && <WidgetCharts data={providerData} />}
-    </div>
+      <UpdateWidgetDialog
+        errors={errors}
+        handleSubmit={handleSubmit}
+        register={register}
+        title={'Update Widget'}
+        isOpen={isUpsetWidgetOpen}
+        setIsOpen={setIsUpsetWidgetOpen}
+        submitHandler={onSubmitMiddleware}
+      />
+    </>
   )
 }
 export default Widget

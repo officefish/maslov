@@ -9,17 +9,17 @@ import {
   StyledFormBody,
   StyledFormWrapper,
   StyledFormHeader,
-} from '../../../workspace.styled'
+} from '../../../../workspace.styled'
 
 import FormField from '@client/components/form/dev/field'
 import { FormProps } from '@/client/utilities/form.types'
 
-interface NewWidgetDialogProps extends FormProps {
+interface DialogProps extends FormProps {
   isOpen: boolean
   setIsOpen: (status: boolean) => void
 }
 
-const NewWidgetDialog: FC<NewWidgetDialogProps> = (props) => {
+const UpdateRequestDialog: FC<DialogProps> = (props) => {
   const modalRef = useRef<HTMLDialogElement>(null)
 
   const {
@@ -37,7 +37,7 @@ const NewWidgetDialog: FC<NewWidgetDialogProps> = (props) => {
   const [isOverflowHidden, setIsOverflowHidden] = useGlobalOverflowHidden()
   const onDialogClose = () => setIsOverflowHidden(false)
 
-  function cancelWidgetCration(e: MouseEvent<HTMLButtonElement>): void {
+  function cancelWorkspaceCration(e: MouseEvent<HTMLButtonElement>): void {
     e.preventDefault()
     setIsOpen(false)
   }
@@ -57,10 +57,11 @@ const NewWidgetDialog: FC<NewWidgetDialogProps> = (props) => {
           <form onSubmit={handleSubmit(submitHandler)}>
             <StyledFormBody>
               <FormField title="Symbol" register={register} errors={errors} />
+              <FormField title="Function" register={register} errors={errors} />
             </StyledFormBody>
             <div className="h-[30%] m-8 flex">
-              <StyledReadyInput type="submit" value="New widget" />
-              <StyledCancelButton onClick={cancelWidgetCration}>
+              <StyledReadyInput type="submit" value="New workspace" />
+              <StyledCancelButton onClick={cancelWorkspaceCration}>
                 Cancel
               </StyledCancelButton>
             </div>
@@ -70,4 +71,4 @@ const NewWidgetDialog: FC<NewWidgetDialogProps> = (props) => {
     </StyledDialog>
   )
 }
-export default NewWidgetDialog
+export default UpdateRequestDialog

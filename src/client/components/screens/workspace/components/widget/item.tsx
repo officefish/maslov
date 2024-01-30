@@ -10,7 +10,7 @@ const WidgetTableItem: FC<IWidgetTableItem> = (props) => {
   //const entries = Object.entries(props)
   return (
     <tr>
-      <th>{data?.date.toDateString()}</th>
+      <th>{data?.date?.toDateString()}</th>
       <td>{data?.open}</td>
       <td>{data?.close}</td>
       <td>{data?.high}</td>

@@ -33,7 +33,7 @@ export function useNewWorkspaceValidator() {
   return { register, handleSubmit, errors }
 }
 
-export function useNewWidgetValidator() {
+export function useUpsetWidgetValidator() {
   const symbol = {
     symbol: z
       .string({
