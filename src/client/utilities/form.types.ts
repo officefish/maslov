@@ -1,3 +1,5 @@
+import { FormEvent } from 'react'
+
 import {
   FieldErrors,
   FieldValues,
@@ -21,6 +23,10 @@ export interface FormFieldProps {
   value?: string | number
 }
 
+export interface SelectFormFieldProps extends FormFieldProps {
+  items: any[]
+  onChange: (e: FormEvent) => void
+}
 export interface SubmitButtonProps {
   title: string
 }

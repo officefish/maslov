@@ -1,4 +1,4 @@
-import { FC, useRef, MouseEvent, useEffect } from 'react'
+import { FC, useRef, useState, MouseEvent, useEffect } from 'react'
 import useGlobalOverflowHidden from '@client/hooks/force-overflow'
 
 import {
@@ -9,10 +9,17 @@ import {
   StyledFormBody,
   StyledFormWrapper,
   StyledFormHeader,
+  //StyledDropdownButton,
+  //StyledDropdownContent,
 } from '../../../workspace.styled'
+
+import { CoreStock } from '@/client/models/exchange/alpha-vintage.types'
 
 import FormField from '@client/components/form/dev/field'
 import { FormProps } from '@/client/utilities/form.types'
+import { getEnumKeys } from '@/client/utilities/enum.utilities'
+import SelectFormField from '@/client/components/form/dev/select.field'
+import { UseFormRegisterReturn } from 'react-hook-form'
 
 interface NewWidgetDialogProps extends FormProps {
   isOpen: boolean
@@ -49,21 +56,39 @@ const UpdateWidgetDialog: FC<NewWidgetDialogProps> = (props) => {
     isOpen ? modal.showModal() : modal.close()
   })
 
+  const [currentCore, setCurrentCore] = useState<CoreStock>(CoreStock.DAILY)
+
+  const handleCore = (e) => {
+    //console.log(e.target.value)
+    setCurrentCore(CoreStock[e.target.value as keyof typeof CoreStock])
+  }
+
   return (
     <StyledDialog ref={modalRef} onClose={onDialogClose}>
       <StyledModalBox>
         <StyledFormWrapper>
           <StyledFormHeader>{title}</StyledFormHeader>
-          <form onSubmit={handleSubmit(submitHandler)}>
+          <form
+            className="flex glex-row justify-center"
+            onSubmit={handleSubmit(submitHandler)}
+          >
             <StyledFormBody>
               <FormField title="Symbol" register={register} errors={errors} />
+              <SelectFormField
+                title="Function"
+                onChange={handleCore}
+                value={currentCore}
+                items={getEnumKeys(CoreStock)}
+                register={register}
+                errors={errors}
+              />
+              <div className="h-[30%] m-8 flex">
+                <StyledReadyInput type="submit" value={title} />
+                <StyledCancelButton onClick={cancelWidgetCration}>
+                  Cancel
+                </StyledCancelButton>
+              </div>
             </StyledFormBody>
-            <div className="h-[30%] m-8 flex">
-              <StyledReadyInput type="submit" value={title} />
-              <StyledCancelButton onClick={cancelWidgetCration}>
-                Cancel
-              </StyledCancelButton>
-            </div>
           </form>
         </StyledFormWrapper>
       </StyledModalBox>

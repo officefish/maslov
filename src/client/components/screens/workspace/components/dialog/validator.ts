@@ -6,6 +6,7 @@ import {
 } from 'react-hook-form'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { CoreStock } from '@/client/models/exchange/alpha-vintage.types'
 
 export function useNewWorkspaceValidator() {
   const title = {
@@ -44,8 +45,13 @@ export function useUpsetWidgetValidator() {
       .max(24, { message: 'Must be 24 or less characters long' }),
   }
 
+  const api_function = {
+    function: z.nativeEnum(CoreStock),
+  }
+
   const schema = z.object({
     ...symbol,
+    ...api_function,
   })
 
   const {

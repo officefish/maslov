@@ -117,16 +117,17 @@ const Widget: FC<IWidget> = (props) => {
   const { onSubmit, serverError, data: updateWidgetResponse } = useUpdateWidget()
 
   const onSubmitMiddleware = (middlewareData) => {
-    middlewareData['interval'] = '5min'
+    console.log(middlewareData)
+    //middlewareData['interval'] = '5min'
     const options = JSON.stringify(middlewareData)
     const responseData = {
-      api_function: 'intraday',
+      //api_function: 'intraday',
       widgetId: id,
       options,
     }
     //console.log(responseData)
     //setIsValid(false)
-    onSubmit(responseData)
+    //onSubmit(responseData)
   }
 
   return (

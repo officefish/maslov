@@ -2,7 +2,7 @@ import { FC } from 'react'
 //import { ISlot } from '@/client/models/exchange.types'
 import WidgetTableItem from './item'
 import { UserSerie } from 'react-charts'
-import { ISlot } from '@/client/models/exchange.types'
+import { ISlot } from '@/client/models/exchange/types'
 
 interface IWidgetTable {
   data: UserSerie<unknown>[]

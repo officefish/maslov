@@ -32,17 +32,17 @@ modal
 `
 
 export const StyledModalBox = tw.div`
-!w-11/12 !max-w-5xl !h-[80%] 
+!w-11/12 !max-w-5xl !h-min-[80%] 
 modal-box
 flex flex-col items-center justify-center
 `
 export const StyledFormBody = tw.div`
 card-body
-w-full sm:w-[90%] lg-[75%]
+w-full sm:w-[90%] lg:w-[75%]
 `
 
 export const StyledFormWrapper = tw.div`
-card max-w-[96%] md:max-w-[70%] shadow-2xl flex flex-col items-center bg-base-300 dark:bg-base-300-dark h-[70%] w-full
+card max-w-[96%] md:max-w-[70%] shadow-2xl flex flex-col items-center bg-base-300 dark:bg-base-300-dark h-min-[70%] w-full
 `
 export const StyledFormHeader = tw.h2`
 w-full 
@@ -62,4 +62,23 @@ dark-text-accent-content-dark
 export const WidgetTab = tw.button<IsActive>`
 tab 
 ${(p) => (p.$active ? 'tab-active' : '')}
+`
+
+export const StyledDropdownButton = tw.button<IsActive>`
+btn
+${(p) => (p.$active ? 'btn-primary' : 'btn-ghost')}
+`
+export const StyledDropdownContent = tw.div`
+dropdown-content 
+top-px max-h-96 
+h-[19vh]
+w-52 
+overflow-y-auto 
+mt-14
+rounded-t-box rounded-b-box 
+shadow-2xl 
+bg-base-200 
+text-base-content 
+dark:bg-base-200-dark 
+dark:text-base-content-dark
 `

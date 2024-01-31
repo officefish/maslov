@@ -1,4 +1,4 @@
-import { ISlot } from '@/client/models/exchange.types'
+import { ISlot } from '@/client/models/exchange/types'
 import { FC } from 'react'
 
 interface IWidgetTableItem {
