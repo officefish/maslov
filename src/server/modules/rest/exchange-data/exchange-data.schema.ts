@@ -40,6 +40,17 @@ const AlphaVintageSchema = z.object({
   datatype: z.nativeEnum(Datatype).optional(),
 })
 
+const AlphaVintageCoreSchema = z.object({
+  symbol: z.string(),
+  api_function: z.string(),
+  interval: z.nativeEnum(IntervalMinutes).optional(),
+  adjusted: z.boolean().optional(),
+  extended_hours: z.boolean().optional(),
+  month: z.string().optional(),
+  outputsize: z.nativeEnum(OutputSize).optional(),
+  datatype: z.nativeEnum(Datatype).optional(),
+})
 
 export class AlphaVintageMinDto extends createZodDto(AlphaVintageMinSchema) {}
 export class AlphaVintageDto extends createZodDto(AlphaVintageSchema) {}
+export class AlphaVintageCoreDto extends createZodDto(AlphaVintageCoreSchema) {}

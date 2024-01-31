@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common'
 import { AppConfigService } from '../../config/config.service'
 import axios from 'axios'
-import { IBM_DAILY } from './ibm.daily'
+import { FakeService } from './fake.service'
 
 export interface IAlphaVintageMinOptions {
   symbol: string
@@ -16,11 +16,17 @@ export interface IAlphaVintageOptions extends IAlphaVintageMinOptions {
   interval: '1min' | '5min' | '15min' | '30min' | '60min'
 }
 
+export interface IAlphaVintageCoreintageOptions extends IAlphaVintageMinOptions {
+  interval?: '1min' | '5min' | '15min' | '30min' | '60min'
+}
+
 @Injectable()
 export class AlphaVintageService {
   private readonly url = 'https://www.alphavantage.co/query?'
-  private readonly getFakeDaily = () => IBM_DAILY
-  constructor(private readonly env: AppConfigService) {}
+  constructor(
+    private readonly env: AppConfigService,
+    private readonly faker: FakeService,
+    ) {}
   get apikey() {
     return this.env.getAlphaVintageApiKey()
   }
@@ -60,7 +66,7 @@ export class AlphaVintageService {
 
   async daily({
     options = {},
-  }: { options?: Partial<IAlphaVintageMinOptions> } = {}) {
+  }: { options?: Partial<IAlphaVintageCoreintageOptions> } = {}) {
     const {
       symbol = 'IBM',
       adjusted = true,
@@ -70,18 +76,94 @@ export class AlphaVintageService {
       datatype = 'json',
     } = options
 
-    return { data: this.getFakeDaily()} 
+    const params = {
+      function: 'TIME_SERIES_DAILY',
+      apikey: this.apikey,
+      symbol,
+      adjusted,
+      extended_hours,
+      month,
+      outputsize,
+      datatype,
+    }
 
-    // const params = {
-    //   function: 'TIME_SERIES_INTRADAY',
-    //   apikey: this.apikey,
-    //   symbol,
-    //   adjusted,
-    //   extended_hours,
-    //   month,
-    //   outputsize,
-    //   datatype,
-    // }
+    //console.log('daily')
+    //console.log(params)
+
+
+    return { data: this.faker.fakeDaily() }
+
+
+    // return axios.get(this.url, {
+    //   params,
+    //   headers: {
+    //     'User-Agent': 'request',
+    //   },
+    // })
+  }
+
+  async weekly({
+    options = {},
+  }: { options?: Partial<IAlphaVintageCoreintageOptions> } = {}) {
+    const {
+      symbol = 'IBM',
+      adjusted = true,
+      extended_hours = true,
+      month = '2009-01',
+      outputsize = 'compact',
+      datatype = 'json',
+    } = options
+
+    const params = {
+      function: 'TIME_SERIES_WEEKLY',
+      apikey: this.apikey,
+      symbol,
+      adjusted,
+      extended_hours,
+      month,
+      outputsize,
+      datatype,
+    }
+
+    //console.log('weekly')
+    //console.log(params)
+
+    return { data: this.faker.fakeWeekly()}
+    // return axios.get(this.url, {
+    //   params,
+    //   headers: {
+    //     'User-Agent': 'request',
+    //   },
+    // })
+  }
+
+  async monthly({
+    options = {},
+  }: { options?: Partial<IAlphaVintageCoreintageOptions> } = {}) {
+    const {
+      symbol = 'IBM',
+      adjusted = true,
+      extended_hours = true,
+      month = '2009-01',
+      outputsize = 'compact',
+      datatype = 'json',
+    } = options
+
+    const params = {
+      function: 'TIME_SERIES_MONTHLY',
+      apikey: this.apikey,
+      symbol,
+      adjusted,
+      extended_hours,
+      month,
+      outputsize,
+      datatype,
+    }
+
+    //console.log('monthly')
+    //console.log(params)
+
+    return { data: this.faker.fakeMonthly()}
 
     // return axios.get(this.url, {
     //   params,

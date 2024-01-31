@@ -11,6 +11,8 @@ import { faChartSimple } from '@fortawesome/free-solid-svg-icons'
 
 import { parser } from '@/client/services/parser/alpha-vintage'
 
+import { CoreStock } from '@/client/models/exchange/alpha-vintage.types'
+
 // <FontAwesomeIcon icon="fa-solid fa-square-root-variable" />
 interface IWidget {
   workspaceId?: string
@@ -26,6 +28,7 @@ import { useUpsetWidgetValidator } from '../dialog/validator'
 import { StyledButtonWidget } from '../../workspace.styled'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import UpdateWidgetDialog from '../dialog/upset-widget'
+import { Metadata } from '@/client/models/exchange/alpha-vintage.types'
 
 // const series = [
 //   {
@@ -50,8 +53,14 @@ const Widget: FC<IWidget> = (props) => {
   const [providerData, setProviderData] =
     useState<UserSerie<unknown>[]>(chartData)
 
-  //const { providerData, providerTrigger, providerError } =
-  //useProviderDataSWR(widgetData)
+  const [ widgetMetadata, setWidgetMetadata ] = useState<Metadata>(null)
+
+
+  const {
+    onSubmit,
+    serverError: updateWidgetServerError,
+    data: updateWidgetResponse
+  } = useUpdateWidget()
 
   useEffect(() => {
     if (!isWidgetDataValid) {
@@ -64,8 +73,9 @@ const Widget: FC<IWidget> = (props) => {
 
     const fetchData = async () => {
       const { symbol } = JSON.parse(widgetData?.options)
+      const api_function = widgetData?.api_function
       const response = await fetch(
-        `http://localhost:8001/api/v1/data/alpha-vintage/daily?symbol=${symbol}`,
+        `http://localhost:8001/api/v1/data/alpha-vintage/core?symbol=${symbol}&api_function=${api_function}`,
       )
       return await response.json()
     }
@@ -73,8 +83,9 @@ const Widget: FC<IWidget> = (props) => {
     if (widgetData) {
       fetchData().then((response) => {
         //console.log(response.data)
-        const data = parser('daily', response.data)
-        setProviderData(data)
+        const { metadata, slots } = parser(response.data)
+        setWidgetMetadata(metadata)
+        setProviderData(slots)
         //console.log(chartData)
         //console.log(data)
         //setProviderData(data)
@@ -90,6 +101,14 @@ const Widget: FC<IWidget> = (props) => {
       //console.log('triggerProvider')
     }
 
+    if(updateWidgetResponse && !isWidgetDataValid) {
+      setIsWidgetDataValid(true)
+    }
+
+    if(updateWidgetServerError) {
+      console.log(updateWidgetServerError)
+    }
+
     //if (providerError) {
     //  console.log(providerError)
     // }
@@ -102,6 +121,8 @@ const Widget: FC<IWidget> = (props) => {
     //providerTrigger,
     error,
     isWidgetDataValid,
+    updateWidgetResponse,
+    updateWidgetServerError,
     //providerData,
     //providerError,
   ])
@@ -114,20 +135,21 @@ const Widget: FC<IWidget> = (props) => {
     setIsUpsetWidgetOpen(true)
   }
 
-  const { onSubmit, serverError, data: updateWidgetResponse } = useUpdateWidget()
+ 
 
   const onSubmitMiddleware = (middlewareData) => {
-    console.log(middlewareData)
-    //middlewareData['interval'] = '5min'
+    const api_function = middlewareData['function']
+    middlewareData['function'] = undefined
     const options = JSON.stringify(middlewareData)
     const responseData = {
-      //api_function: 'intraday',
-      widgetId: id,
+      api_function,
+      id,
       options,
     }
-    //console.log(responseData)
     //setIsValid(false)
-    //onSubmit(responseData)
+    setIsWidgetDataValid(false)
+    setIsUpsetWidgetOpen(false)
+    onSubmit(responseData)
   }
 
   return (
@@ -140,7 +162,10 @@ const Widget: FC<IWidget> = (props) => {
           <div>
             <StyledButtonWidget onClick={showUpsetWidgetModal}>
               <FontAwesomeIcon icon={faChartSimple} />
-              IBM | Daily
+              { widgetMetadata 
+                ? (<span>{widgetMetadata.symbol} | {widgetMetadata.api_function}</span>) 
+                : (<>unknown</>)
+              }  
             </StyledButtonWidget>
           </div>
           <WidgetTabs mode={mode} setMode={setMode} />
@@ -149,6 +174,8 @@ const Widget: FC<IWidget> = (props) => {
         {mode === ViewMode.CHART && <WidgetCharts data={providerData} />}
       </div>
       <UpdateWidgetDialog
+        symbol={widgetMetadata.symbol}
+        core={CoreStock[widgetMetadata.api_function.toUpperCase()]}
         errors={errors}
         handleSubmit={handleSubmit}
         register={register}

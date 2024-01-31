@@ -19,11 +19,13 @@ import FormField from '@client/components/form/dev/field'
 import { FormProps } from '@/client/utilities/form.types'
 import { getEnumKeys } from '@/client/utilities/enum.utilities'
 import SelectFormField from '@/client/components/form/dev/select.field'
-import { UseFormRegisterReturn } from 'react-hook-form'
+//import { UseFormRegisterReturn } from 'react-hook-form'
 
 interface NewWidgetDialogProps extends FormProps {
   isOpen: boolean
   setIsOpen: (status: boolean) => void
+  symbol: string | null
+  core: CoreStock | null
 }
 
 const UpdateWidgetDialog: FC<NewWidgetDialogProps> = (props) => {
@@ -37,6 +39,8 @@ const UpdateWidgetDialog: FC<NewWidgetDialogProps> = (props) => {
     handleSubmit,
     setIsOpen,
     isOpen,
+    core,
+    symbol,
   } = props
 
   /* body overflow: hidden style controller */
@@ -56,7 +60,7 @@ const UpdateWidgetDialog: FC<NewWidgetDialogProps> = (props) => {
     isOpen ? modal.showModal() : modal.close()
   })
 
-  const [currentCore, setCurrentCore] = useState<CoreStock>(CoreStock.DAILY)
+  const [currentCore, setCurrentCore] = useState<CoreStock>(core)
 
   const handleCore = (e) => {
     //console.log(e.target.value)
@@ -73,7 +77,7 @@ const UpdateWidgetDialog: FC<NewWidgetDialogProps> = (props) => {
             onSubmit={handleSubmit(submitHandler)}
           >
             <StyledFormBody>
-              <FormField title="Symbol" register={register} errors={errors} />
+              <FormField value={symbol} title="Symbol" register={register} errors={errors} />
               <SelectFormField
                 title="Function"
                 onChange={handleCore}

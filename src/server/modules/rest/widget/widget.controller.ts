@@ -62,7 +62,6 @@ export class WidgetController {
     }
 
     const payload = {
-      //widgets: workspace.
       api_function: widget.function,
       options: widget.options,
     }

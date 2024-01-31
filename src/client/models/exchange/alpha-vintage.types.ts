@@ -3,3 +3,10 @@ export enum CoreStock {
   WEEKLY = 'WEEKLY',
   MONTHLY = 'MONTHLY',
 }
+
+
+export interface Metadata {
+  symbol: string
+  api_function: string
+}
+  

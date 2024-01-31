@@ -25,7 +25,11 @@ import {
   IAlphaVintageOptions,
   IAlphaVintageMinOptions,
 } from './alpha-vintage.service'
-import { AlphaVintageDto, AlphaVintageMinDto } from './exchange-data.schema'
+import {
+  AlphaVintageCoreDto,
+  AlphaVintageDto,
+  AlphaVintageMinDto,
+} from './exchange-data.schema'
 
 @Controller('data')
 @ApiTags('data')
@@ -110,9 +114,63 @@ export class ExchangeDataController {
       datatype,
     } satisfies IAlphaVintageMinOptions
     //console.log(options)
-    const response = await this.alphavintage.daily({ options: { symbol: options.symbol} })
+    const response = await this.alphavintage.daily({
+      options: { symbol: options.symbol },
+    })
     const data = response.data
     //console.log(data)
+    return data
+      ? reply.code(201).send({ statusCode: 201, data })
+      : reply.code(403).send({ statusCode: 401, message: '' })
+  }
+
+  @Get('alpha-vintage/core')
+  async getAlphaVintageCore(
+    // @Req() request: FastifyRequest,
+    @Res() reply: FastifyReply,
+    @Query() params: AlphaVintageCoreDto,
+  ) {
+    const symbol = params.symbol || 'IBM'
+    const api_function = params.api_function || 'DAILY'
+    const adjusted = params.adjusted || true
+    const extended_hours = params.extended_hours || true
+    const month = params.month || '2009-01'
+    const outputsize = params.outputsize || 'compact'
+    const datatype = params.datatype || 'json'
+    const options = {
+      symbol,
+      adjusted,
+      extended_hours,
+      month,
+      outputsize,
+      datatype,
+    } satisfies IAlphaVintageMinOptions
+    //console.log(options)
+    let response
+    switch (api_function.toLowerCase()) {
+      case 'daily':
+        response = await this.alphavintage.daily({
+          options: { symbol: options.symbol },
+        })
+        break
+      case 'weekly':
+        response = await this.alphavintage.weekly({
+          options: { symbol: options.symbol },
+        })
+        break
+      case 'monthly':
+        response = await this.alphavintage.monthly({
+          options: { symbol: options.symbol },
+        })
+        break
+      default:
+        response = await this.alphavintage.monthly({
+          options: { symbol: options.symbol },
+        })
+        break
+    }
+
+    const data = response.data
     return data
       ? reply.code(201).send({ statusCode: 201, data })
       : reply.code(403).send({ statusCode: 401, message: '' })
