@@ -19,7 +19,6 @@ import FormField from '@client/components/form/dev/field'
 import { FormProps } from '@/client/utilities/form.types'
 import { getEnumKeys } from '@/client/utilities/enum.utilities'
 import SelectFormField from '@/client/components/form/dev/select.field'
-//import { UseFormRegisterReturn } from 'react-hook-form'
 
 interface NewWidgetDialogProps extends FormProps {
   isOpen: boolean
@@ -43,9 +42,7 @@ const UpdateWidgetDialog: FC<NewWidgetDialogProps> = (props) => {
     symbol,
   } = props
 
-  /* body overflow: hidden style controller */
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [isOverflowHidden, setIsOverflowHidden] = useGlobalOverflowHidden()
+  const { setIsOverflowHidden } = useGlobalOverflowHidden()
   const onDialogClose = () => setIsOverflowHidden(false)
 
   function cancelWidgetCration(e: MouseEvent<HTMLButtonElement>): void {
@@ -63,7 +60,6 @@ const UpdateWidgetDialog: FC<NewWidgetDialogProps> = (props) => {
   const [currentCore, setCurrentCore] = useState<CoreStock>(core)
 
   const handleCore = (e) => {
-    //console.log(e.target.value)
     setCurrentCore(CoreStock[e.target.value as keyof typeof CoreStock])
   }
 
@@ -77,7 +73,12 @@ const UpdateWidgetDialog: FC<NewWidgetDialogProps> = (props) => {
             onSubmit={handleSubmit(submitHandler)}
           >
             <StyledFormBody>
-              <FormField value={symbol} title="Symbol" register={register} errors={errors} />
+              <FormField
+                value={symbol}
+                title="Symbol"
+                register={register}
+                errors={errors}
+              />
               <SelectFormField
                 title="Function"
                 onChange={handleCore}

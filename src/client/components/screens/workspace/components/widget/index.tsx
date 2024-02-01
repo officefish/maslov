@@ -53,13 +53,14 @@ const Widget: FC<IWidget> = (props) => {
   const [providerData, setProviderData] =
     useState<UserSerie<unknown>[]>(chartData)
 
-  const [ widgetMetadata, setWidgetMetadata ] = useState<Metadata>(null)
+  const [widgetMetadata, setWidgetMetadata] = useState<Metadata>(null)
 
+  const [isLoading, setIsLoading] = useState(false)
 
   const {
     onSubmit,
     serverError: updateWidgetServerError,
-    data: updateWidgetResponse
+    data: updateWidgetResponse,
   } = useUpdateWidget()
 
   useEffect(() => {
@@ -81,11 +82,13 @@ const Widget: FC<IWidget> = (props) => {
     }
 
     if (widgetData) {
+      setIsLoading(true)
       fetchData().then((response) => {
         //console.log(response.data)
         const { metadata, slots } = parser(response.data)
         setWidgetMetadata(metadata)
         setProviderData(slots)
+        setIsLoading(false)
         //console.log(chartData)
         //console.log(data)
         //setProviderData(data)
@@ -101,11 +104,11 @@ const Widget: FC<IWidget> = (props) => {
       //console.log('triggerProvider')
     }
 
-    if(updateWidgetResponse && !isWidgetDataValid) {
+    if (updateWidgetResponse && !isWidgetDataValid) {
       setIsWidgetDataValid(true)
     }
 
-    if(updateWidgetServerError) {
+    if (updateWidgetServerError) {
       console.log(updateWidgetServerError)
     }
 
@@ -135,8 +138,6 @@ const Widget: FC<IWidget> = (props) => {
     setIsUpsetWidgetOpen(true)
   }
 
- 
-
   const onSubmitMiddleware = (middlewareData) => {
     const api_function = middlewareData['function']
     middlewareData['function'] = undefined
@@ -149,6 +150,7 @@ const Widget: FC<IWidget> = (props) => {
     //setIsValid(false)
     setIsWidgetDataValid(false)
     setIsUpsetWidgetOpen(false)
+    setIsLoading(true)
     onSubmit(responseData)
   }
 
@@ -162,20 +164,31 @@ const Widget: FC<IWidget> = (props) => {
           <div>
             <StyledButtonWidget onClick={showUpsetWidgetModal}>
               <FontAwesomeIcon icon={faChartSimple} />
-              { widgetMetadata 
-                ? (<span>{widgetMetadata.symbol} | {widgetMetadata.api_function}</span>) 
-                : (<>unknown</>)
-              }  
+              {widgetMetadata ? (
+                <span>
+                  {widgetMetadata.symbol} | {widgetMetadata.api_function}
+                </span>
+              ) : (
+                <>unknown</>
+              )}
             </StyledButtonWidget>
           </div>
           <WidgetTabs mode={mode} setMode={setMode} />
         </div>
-        {mode === ViewMode.TABLE && <WidgetTable data={providerData} />}
-        {mode === ViewMode.CHART && <WidgetCharts data={providerData} />}
+        {isLoading ? (
+          <div className="w-full h-96 outline-none border-2 rounded flex items-center justify-center border-accent dark:border-accent-dark">
+            <span className="loading loading-ring text-accent dark:text-accent-dark loading-lg"></span>
+          </div>
+        ) : (
+          <>
+            {mode === ViewMode.TABLE && <WidgetTable data={providerData} />}
+            {mode === ViewMode.CHART && <WidgetCharts data={providerData} />}
+          </>
+        )}
       </div>
       <UpdateWidgetDialog
-        symbol={widgetMetadata.symbol}
-        core={CoreStock[widgetMetadata.api_function.toUpperCase()]}
+        symbol={widgetMetadata?.symbol}
+        core={CoreStock[widgetMetadata?.api_function?.toUpperCase()]}
         errors={errors}
         handleSubmit={handleSubmit}
         register={register}

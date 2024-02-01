@@ -22,5 +22,5 @@ export default function useGlobalOverflowHidden(
     }
   }, [isOverflowHidden, needStable])
 
-  return [isOverflowHidden, setIsOverflowHidden] as const
+  return { isOverflowHidden, setIsOverflowHidden } as const
 }

@@ -34,7 +34,7 @@ const NewWorkspaceDialog: FC<DialogProps> = (props) => {
 
   /* body overflow: hidden style controller */
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [isOverflowHidden, setIsOverflowHidden] = useGlobalOverflowHidden()
+  const { setIsOverflowHidden } = useGlobalOverflowHidden()
   const onDialogClose = () => setIsOverflowHidden(false)
 
   function cancelWorkspaceCration(e: MouseEvent<HTMLButtonElement>): void {

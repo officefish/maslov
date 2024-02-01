@@ -33,7 +33,7 @@ export const AvatarPicker: FC<IAvatarPicker> = ({
 
   /* body overflow: hidden style controller */
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [isOverflowHidden, setIsOverflowHidden] = useGlobalOverflowHidden()
+  const { setIsOverflowHidden } = useGlobalOverflowHidden()
 
   const [preview, setPreview] = useState<string>()
 
