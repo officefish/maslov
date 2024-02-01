@@ -10,25 +10,36 @@
 import { UserSerie } from 'react-charts'
 import { Metadata } from '@/client/models/exchange/alpha-vintage.types'
 
+export interface ParserError {
+  message: string
+}
+
 interface ParseResponse {
   metadata: Metadata
   slots: UserSerie<unknown>[]
+  error: ParserError
 }
 
-function parseData(rawData: any): ParseResponse {
+function parseData(data: any): ParseResponse {
+  if (data.statusCode === 403) {
+    return { metadata: null, slots: null, error: { message: data.message } }
+  }
+  const rawData = data.data
   console.log(rawData)
   const keys = Object.keys(rawData)
   const metadataKey = keys[0]
   const serieKey = keys[1]
 
-  const metadataSrc = rawData[metadataKey]  
-  const informationFirstWord = metadataSrc["1. Information"].match(/\b\w+\b/)[0] satisfies string
+  const metadataSrc = rawData[metadataKey]
+  const informationFirstWord = metadataSrc['1. Information'].match(
+    /\b\w+\b/,
+  )[0] satisfies string
   // Retrieving the value of the "Symbol" key
-  const symbol = metadataSrc["2. Symbol"]
+  const symbol = metadataSrc['2. Symbol']
 
   const metadata = {
     symbol,
-    api_function: informationFirstWord.toUpperCase()
+    api_function: informationFirstWord.toUpperCase(),
   } satisfies Metadata
 
   const seriesData = rawData[serieKey]
@@ -50,11 +61,11 @@ function parseData(rawData: any): ParseResponse {
 
   //return []
 
-  return { metadata, slots: [serie] }
+  return { metadata, slots: [serie], error: null }
 }
 
-export function parser(rawData: any): ParseResponse {
-  const { metadata, slots } = parseData(rawData)
+export function parser(data: any): ParseResponse {
+  const { metadata, slots, error } = parseData(data)
   //console.log(slots)
-  return { metadata, slots }
+  return { metadata, slots, error }
 }

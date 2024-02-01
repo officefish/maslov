@@ -9,7 +9,7 @@ import { FC, useState, useEffect, MouseEvent } from 'react'
 import WidgetTable from './table'
 import { faChartSimple } from '@fortawesome/free-solid-svg-icons'
 
-import { parser } from '@/client/services/parser/alpha-vintage'
+import { parser, ParserError } from '@/client/services/parser/alpha-vintage'
 
 import { CoreStock } from '@/client/models/exchange/alpha-vintage.types'
 
@@ -29,6 +29,8 @@ import { StyledButtonWidget } from '../../workspace.styled'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import UpdateWidgetDialog from '../dialog/upset-widget'
 import { Metadata } from '@/client/models/exchange/alpha-vintage.types'
+import WithLoader from './loading'
+import ErrorBlock from './error'
 
 // const series = [
 //   {
@@ -54,6 +56,9 @@ const Widget: FC<IWidget> = (props) => {
     useState<UserSerie<unknown>[]>(chartData)
 
   const [widgetMetadata, setWidgetMetadata] = useState<Metadata>(null)
+  const [symbol, setSymbol] = useState(widgetMetadata?.symbol)
+
+  const [parserError, setParserError] = useState<ParserError>(null)
 
   const [isLoading, setIsLoading] = useState(false)
 
@@ -78,30 +83,31 @@ const Widget: FC<IWidget> = (props) => {
       const response = await fetch(
         `http://localhost:8001/api/v1/data/alpha-vintage/core?symbol=${symbol}&api_function=${api_function}`,
       )
+      // const response = await fetch(
+      //   `http://localhost:8001/api/v1/data/alpha-vintage/core/fake?symbol=${symbol}&api_function=${api_function}`,
+      // )
+      // const response = await fetch(
+      //   `http://localhost:8001/api/v1/data/alpha-vintage/core/invalid`,
+      // )
       return await response.json()
     }
 
     if (widgetData) {
       setIsLoading(true)
       fetchData().then((response) => {
-        //console.log(response.data)
-        const { metadata, slots } = parser(response.data)
-        setWidgetMetadata(metadata)
-        setProviderData(slots)
+        const { metadata, slots, error } = parser(response)
+
         setIsLoading(false)
-        //console.log(chartData)
-        //console.log(data)
-        //setProviderData(data)
-        //let entries = Object.entries(response.data)
-        //const slots = entries[1][1]
-        //console.log(slots)
-        //entries = Object.entries(slots)
-        //console.log(entries)
-        //setProviderData(entries)
+
+        if (!error) {
+          setWidgetMetadata(metadata)
+          setSymbol(metadata.symbol)
+          setProviderData(slots)
+          setParserError(null)
+        } else {
+          setParserError(error)
+        }
       })
-      //console.log(json)
-      //providerTrigger()
-      //console.log('triggerProvider')
     }
 
     if (updateWidgetResponse && !isWidgetDataValid) {
@@ -111,23 +117,15 @@ const Widget: FC<IWidget> = (props) => {
     if (updateWidgetServerError) {
       console.log(updateWidgetServerError)
     }
-
-    //if (providerError) {
-    //  console.log(providerError)
-    // }
-
-    //console.log(widgetData)
-    //console.log(providerData)
   }, [
     widgetData,
     trigger,
-    //providerTrigger,
     error,
     isWidgetDataValid,
     updateWidgetResponse,
     updateWidgetServerError,
-    //providerData,
-    //providerError,
+    //widgetMetadata,
+    //symbol,
   ])
 
   const [isUpsetWidgetOpen, setIsUpsetWidgetOpen] = useState(false)
@@ -175,19 +173,17 @@ const Widget: FC<IWidget> = (props) => {
           </div>
           <WidgetTabs mode={mode} setMode={setMode} />
         </div>
-        {isLoading ? (
-          <div className="w-full h-96 outline-none border-2 rounded flex items-center justify-center border-accent dark:border-accent-dark">
-            <span className="loading loading-ring text-accent dark:text-accent-dark loading-lg"></span>
-          </div>
+        {parserError ? (
+          <ErrorBlock message={parserError.message} />
         ) : (
-          <>
+          <WithLoader isLoading={isLoading}>
             {mode === ViewMode.TABLE && <WidgetTable data={providerData} />}
             {mode === ViewMode.CHART && <WidgetCharts data={providerData} />}
-          </>
+          </WithLoader>
         )}
       </div>
       <UpdateWidgetDialog
-        symbol={widgetMetadata?.symbol}
+        symbol={symbol}
         core={CoreStock[widgetMetadata?.api_function?.toUpperCase()]}
         errors={errors}
         handleSubmit={handleSubmit}

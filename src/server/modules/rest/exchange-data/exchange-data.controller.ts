@@ -171,9 +171,31 @@ export class ExchangeDataController {
     }
 
     const data = response.data
-    return data
-      ? reply.code(201).send({ statusCode: 201, data })
-      : reply.code(403).send({ statusCode: 401, message: '' })
+    if (!data) {
+      return reply
+        .code(403)
+        .send({ statusCode: 403, message: 'No response data found' })
+    }
+
+    /* Probabiy bad symbol or some another error */
+    if (data['Error Message']) {
+      reply.code(403).send({
+        statusCode: 403,
+        message: 'Invalid Alpha Vintage Api call. Probably wrong symbol.',
+        data,
+      })
+    }
+
+    /* Api limits catched */
+    if (data['Information']) {
+      reply.code(403).send({
+        statusCode: 403,
+        message: 'Alpha Vintage API Limits enabled. Wait next day.',
+        data,
+      })
+    }
+
+    return reply.code(201).send({ statusCode: 201, data })
   }
 
   @Get('alpha-vintage/core/fake')
@@ -204,5 +226,25 @@ export class ExchangeDataController {
     return data
       ? reply.code(201).send({ statusCode: 201, data })
       : reply.code(403).send({ statusCode: 401, message: '' })
+  }
+
+  @Get('alpha-vintage/core/invalid')
+  async getAlphaVintageCoreInvalid(@Res() reply: FastifyReply) {
+    const data = this.alphavintage.invalidCall()
+    reply.code(403).send({
+      statusCode: 403,
+      message: 'Invalid Alpha Vintage Api call. Probably wrong symbol.',
+      data,
+    })
+  }
+
+  @Get('alpha-vintage/core/limit')
+  async getAlphaVintageCoreLimit(@Res() reply: FastifyReply) {
+    const data = this.alphavintage.invalidCall()
+    reply.code(403).send({
+      statusCode: 403,
+      message: 'Alpha Vintage API Limits enabled. Wait next day.',
+      data,
+    })
   }
 }

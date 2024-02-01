@@ -169,4 +169,12 @@ export class AlphaVintageService {
   async fakeMonthly() {
     return { data: this.faker.fakeMonthly() }
   }
+
+  async invalidCall() {
+    return { data: this.faker.invalidCall() }
+  }
+
+  async apiLimit() {
+    return { data: this.faker.apiLimit() }
+  }
 }
