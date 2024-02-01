@@ -16,7 +16,8 @@ export interface IAlphaVintageOptions extends IAlphaVintageMinOptions {
   interval: '1min' | '5min' | '15min' | '30min' | '60min'
 }
 
-export interface IAlphaVintageCoreintageOptions extends IAlphaVintageMinOptions {
+export interface IAlphaVintageCoreintageOptions
+  extends IAlphaVintageMinOptions {
   interval?: '1min' | '5min' | '15min' | '30min' | '60min'
 }
 
@@ -26,7 +27,7 @@ export class AlphaVintageService {
   constructor(
     private readonly env: AppConfigService,
     private readonly faker: FakeService,
-    ) {}
+  ) {}
   get apikey() {
     return this.env.getAlphaVintageApiKey()
   }
@@ -87,19 +88,16 @@ export class AlphaVintageService {
       datatype,
     }
 
-    //console.log('daily')
-    //console.log(params)
+    return axios.get(this.url, {
+      params,
+      headers: {
+        'User-Agent': 'request',
+      },
+    })
+  }
 
-
+  async fakeDaily() {
     return { data: this.faker.fakeDaily() }
-
-
-    // return axios.get(this.url, {
-    //   params,
-    //   headers: {
-    //     'User-Agent': 'request',
-    //   },
-    // })
   }
 
   async weekly({
@@ -125,16 +123,16 @@ export class AlphaVintageService {
       datatype,
     }
 
-    //console.log('weekly')
-    //console.log(params)
+    return axios.get(this.url, {
+      params,
+      headers: {
+        'User-Agent': 'request',
+      },
+    })
+  }
 
-    return { data: this.faker.fakeWeekly()}
-    // return axios.get(this.url, {
-    //   params,
-    //   headers: {
-    //     'User-Agent': 'request',
-    //   },
-    // })
+  async fakeWeekly() {
+    return { data: this.faker.fakeWeekly() }
   }
 
   async monthly({
@@ -160,16 +158,15 @@ export class AlphaVintageService {
       datatype,
     }
 
-    //console.log('monthly')
-    //console.log(params)
+    return axios.get(this.url, {
+      params,
+      headers: {
+        'User-Agent': 'request',
+      },
+    })
+  }
 
-    return { data: this.faker.fakeMonthly()}
-
-    // return axios.get(this.url, {
-    //   params,
-    //   headers: {
-    //     'User-Agent': 'request',
-    //   },
-    // })
+  async fakeMonthly() {
+    return { data: this.faker.fakeMonthly() }
   }
 }

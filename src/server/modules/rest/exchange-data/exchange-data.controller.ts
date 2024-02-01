@@ -175,4 +175,34 @@ export class ExchangeDataController {
       ? reply.code(201).send({ statusCode: 201, data })
       : reply.code(403).send({ statusCode: 401, message: '' })
   }
+
+  @Get('alpha-vintage/core/fake')
+  async getAlphaVintageCoreFake(
+    // @Req() request: FastifyRequest,
+    @Res() reply: FastifyReply,
+    @Query() params: AlphaVintageCoreDto,
+  ) {
+    const api_function = params.api_function || 'DAILY'
+
+    let response
+    switch (api_function.toLowerCase()) {
+      case 'daily':
+        response = await this.alphavintage.fakeDaily()
+        break
+      case 'weekly':
+        response = await this.alphavintage.fakeWeekly()
+        break
+      case 'monthly':
+        response = await this.alphavintage.fakeMonthly()
+        break
+      default:
+        response = await this.alphavintage.fakeDaily()
+        break
+    }
+
+    const data = response.data
+    return data
+      ? reply.code(201).send({ statusCode: 201, data })
+      : reply.code(403).send({ statusCode: 401, message: '' })
+  }
 }
