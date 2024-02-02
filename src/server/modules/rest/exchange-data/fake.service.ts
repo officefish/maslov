@@ -7,7 +7,6 @@ import { INVALID_API_CALL } from './faker/invalid.call'
 import { API_LIMIT } from './faker/limits'
 @Injectable()
 export class FakeService {
-
   fakeDaily() {
     return IBM_DAILY
   }

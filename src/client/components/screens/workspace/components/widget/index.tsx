@@ -31,6 +31,7 @@ import UpdateWidgetDialog from '../dialog/upset-widget'
 import { Metadata } from '@/client/models/exchange/alpha-vintage.types'
 import WithLoader from './loading'
 import ErrorBlock from './error'
+import WidgetHeader from './header'
 
 // const series = [
 //   {
@@ -80,12 +81,12 @@ const Widget: FC<IWidget> = (props) => {
     const fetchData = async () => {
       const { symbol } = JSON.parse(widgetData?.options)
       const api_function = widgetData?.api_function
-      const response = await fetch(
-        `http://localhost:8001/api/v1/data/alpha-vintage/core?symbol=${symbol}&api_function=${api_function}`,
-      )
       // const response = await fetch(
-      //   `http://localhost:8001/api/v1/data/alpha-vintage/core/fake?symbol=${symbol}&api_function=${api_function}`,
+      //   `http://localhost:8001/api/v1/data/alpha-vintage/core?symbol=${symbol}&api_function=${api_function}`,
       // )
+      const response = await fetch(
+        `http://localhost:8001/api/v1/data/alpha-vintage/core/fake?symbol=${symbol}&api_function=${api_function}`,
+      )
       // const response = await fetch(
       //   `http://localhost:8001/api/v1/data/alpha-vintage/core/invalid`,
       // )
@@ -152,12 +153,24 @@ const Widget: FC<IWidget> = (props) => {
     onSubmit(responseData)
   }
 
+  const onWidgetRemove = () => {
+    console.log('onWidgetRemove')
+  }
+
   return (
     <>
       <div className="w-full md:w-[80%] card card-normal bg-base-300 dark:bg-base-300-dark shadow-xl flex flex-col items-center p-4">
-        <div className="text-sm text-primary dark:text-primary-dark">
+        {/* <div className="w-full justify-end text-sm text-info/50 dark:text-info-dark/50 flex flex-row gap-4">
           Alpha-Vintage provider
-        </div>
+          <button className="btn btn-xs btn-outline btn-info opacity-50 hover:opacity-100 btn-ghost">
+            <FontAwesomeIcon icon={faTrash} />
+            <span className="pl-2">remove widget</span>
+          </button>
+        </div> */}
+        <WidgetHeader
+          title="Alpha-Vintage provider"
+          onRemove={onWidgetRemove}
+        />
         <div className="flex flex-row justify-between w-full h-16 items-center">
           <div>
             <StyledButtonWidget onClick={showUpsetWidgetModal}>
