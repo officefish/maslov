@@ -17,5 +17,10 @@ const UpdateWidgetSchema = z.object({
   options: z.string().optional(),
 })
 
+const DeleteWidgetSchema = z.object({
+  id: z.string(),
+})
+
 export class CreateWidgetDto extends createZodDto(CreateWidgetSchema) {}
 export class UpdateWidgetDto extends createZodDto(UpdateWidgetSchema) {}
+export class DeleteWidgetDto extends createZodDto(DeleteWidgetSchema) {}

@@ -24,7 +24,11 @@ import { AuthGuard } from '../auth/auth.guard'
 
 import { FastifyRequest, FastifyReply } from 'fastify'
 import { UserService } from '../user/user.service'
-import { CreateWidgetDto, UpdateWidgetDto } from './widget.schema'
+import {
+  CreateWidgetDto,
+  DeleteWidgetDto,
+  UpdateWidgetDto,
+} from './widget.schema'
 import { WorkspaceService } from '../workspace/workspace.service'
 
 @ApiTags('widget')
@@ -145,8 +149,6 @@ export class WidgetController {
     const where = { id }
     const widget = await this.service.updateWidget(where, data)
 
-    console.log(widget)
-
     if (!widget) {
       return reply.code(403).send({
         statusCode: 403,
@@ -158,6 +160,40 @@ export class WidgetController {
       statusCode: 201,
       message: 'Widget success updated',
       id: widget.id,
+    })
+  }
+
+  @UseGuards(AuthGuard)
+  @Post('/delete')
+  async removeWidget(
+    @Req() request: FastifyRequest,
+    @Res() reply: FastifyReply,
+    @Body() credentials: DeleteWidgetDto,
+  ): Promise<Widget> {
+    const { id } = credentials
+
+    const userId = request['userId']
+    const user = await this.userService.user({ id: userId })
+
+    if (!user) {
+      return reply
+        .code(401)
+        .send({ statusCode: 401, message: 'User not found' })
+    }
+
+    const where = { id }
+    const widget = await this.service.deleteWidget(where)
+
+    if (!widget) {
+      return reply.code(403).send({
+        statusCode: 403,
+        message: 'Bad request. Database error with widget delete',
+      })
+    }
+
+    return reply.code(201).send({
+      statusCode: 201,
+      message: 'Widget success deleted',
     })
   }
 }

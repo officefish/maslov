@@ -15,7 +15,6 @@ const WidgetHeader: FC<IWidgetHeader> = ({ title, onRemove }) => {
   const handleClick = (e: MouseEvent) => {
     e.preventDefault()
     setIsOpen(true)
-    //onRemove()
   }
 
   const handleConfirmRemove = () => {

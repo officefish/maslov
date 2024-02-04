@@ -44,4 +44,10 @@ export class WidgetService {
       data,
     })
   }
+
+  async deleteWidget(where: Prisma.WidgetWhereUniqueInput): Promise<Widget> {
+    return this.prisma.widget.delete({
+      where,
+    })
+  }
 }
