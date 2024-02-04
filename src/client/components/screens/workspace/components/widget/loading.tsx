@@ -14,7 +14,6 @@ const WithLoader: FC<IWithLoader> = ({ children, isLoading }) => {
       ) : (
         <>{children}</>
       )}
-      )
     </>
   )
 }
