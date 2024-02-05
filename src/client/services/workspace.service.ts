@@ -1,4 +1,8 @@
-import { useAxiosFetcher_GET, useAxios_POST_RawData } from './axios.service'
+import {
+  useAxiosFetcher_GET,
+  useAxios_POST_RawData,
+  useAxios_POST_RawData_Redirect,
+} from './axios.service'
 
 import useSWRMutation from 'swr/mutation'
 import { IWorkspace } from '../models/workspace.types'
@@ -119,6 +123,19 @@ function useHook_POST_RawData({ api = 'api/v1', route = 'workspace' } = {}) {
   return { onSubmit, data, serverError }
 }
 
+function useHook_POST_RawData_Redirect({
+  api = 'api/v1',
+  route = 'workspace',
+  redirect = 'workspaces',
+} = {}) {
+  const { onSubmit, serverError } = useAxios_POST_RawData_Redirect({
+    api,
+    route,
+    redirect,
+  })
+  return { onSubmit, serverError }
+}
+
 export const useNewWorkspace = () =>
   useHook_POST_RawData({ route: 'workspace' })
 
@@ -128,3 +145,9 @@ export const useUpdateWidget = () =>
 
 export const useDeleteWidget = () =>
   useHook_POST_RawData({ route: 'widget/delete' })
+
+export const useDeleteWorkspace = () =>
+  useHook_POST_RawData_Redirect({
+    route: 'workspace/delete',
+    redirect: 'workspaces',
+  })

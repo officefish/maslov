@@ -3,6 +3,7 @@ import { FC, MouseEvent, useEffect, useState } from 'react'
 import { useUpsetWidgetValidator } from './components/dialog/validator'
 
 import {
+  useDeleteWorkspace,
   useNewWidget,
   useWorkspaceDataSWR,
 } from '@/client/services/workspace.service'
@@ -31,6 +32,9 @@ const Workspace: FC<IWorkspaceProps> = (props) => {
 
   const { onSubmit, serverError, data: newWidgetResponse } = useNewWidget()
 
+  const { onSubmit: onRemoveSubmit, serverError: removeServerError } =
+    useDeleteWorkspace()
+
   useEffect(() => {
     if (!isValid) {
       trigger()
@@ -43,6 +47,11 @@ const Workspace: FC<IWorkspaceProps> = (props) => {
     if (serverError) {
       console.log(serverError)
     }
+
+    if (removeServerError) {
+      console.log(removeServerError)
+    }
+
     if (newWidgetResponse) {
       //console.log(newWidgetResponse)
       if (newWidgetResponse?.statusCode === 201) {
@@ -50,7 +59,15 @@ const Workspace: FC<IWorkspaceProps> = (props) => {
         setIsUpsetWidgetOpen(false)
       }
     }
-  }, [error, trigger, isValid, setIsValid, serverError, newWidgetResponse])
+  }, [
+    error,
+    trigger,
+    isValid,
+    setIsValid,
+    serverError,
+    removeServerError,
+    newWidgetResponse,
+  ])
 
   const onSubmitMiddleware = (middlewareData) => {
     const api_function = middlewareData['function']
@@ -75,6 +92,7 @@ const Workspace: FC<IWorkspaceProps> = (props) => {
 
   const handleRemoveWorkspace = () => {
     console.log('handleRemoveWorkspace')
+    onRemoveSubmit({ id })
   }
 
   return (
