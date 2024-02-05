@@ -13,6 +13,7 @@ import { WarningSVG } from '@client/components/ui/svg'
 
 const FormField: FC<FormFieldProps> = ({
   title,
+  value,
   placeholder,
   register,
   errors,
@@ -27,6 +28,7 @@ const FormField: FC<FormFieldProps> = ({
         {...register(tag)}
         id={tag}
         type="text"
+        value={value}
         placeholder={placeholder ? placeholder : `valid ${tag}`}
         className={`
             ${errors[tag] && 'invalid'}

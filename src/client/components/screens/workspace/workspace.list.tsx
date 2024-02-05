@@ -1,6 +1,6 @@
 import { FC, MouseEvent, useEffect, useState } from 'react'
 
-import { useNewWorkspaceValidator } from './components/dialog/validator'
+import { useWorkspaceValidator } from './components/dialog/validator'
 import NewWorkspaceDialog from './components/dialog/new-workspace'
 import { useUserWorkspacesSWR } from '@/client/services/workspace.service'
 import WorkspacesListGrid from './components/grid/workspace'
@@ -9,10 +9,10 @@ import { useNewWorkspace } from '@/client/services/workspace.service'
 const WorkspacesList: FC = () => {
   const { workspaces, trigger } = useUserWorkspacesSWR()
 
-  const { onSubmit, serverError, data } = useNewWorkspace() // TODO: also need to process serverError
+  const { onSubmit, serverError, data } = useNewWorkspace()
 
   const [isNewWorkspaceOpen, setIsNewWorkspaceOpen] = useState(false)
-  const { register, handleSubmit, errors } = useNewWorkspaceValidator()
+  const { register, handleSubmit, errors } = useWorkspaceValidator()
 
   const showNewWorkspaceModal = (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault()

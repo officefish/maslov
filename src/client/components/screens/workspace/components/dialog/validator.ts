@@ -8,12 +8,12 @@ import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { CoreStock } from '@/client/models/exchange/alpha-vintage.types'
 
-export function useNewWorkspaceValidator() {
+export function useWorkspaceValidator() {
   const title = {
     title: z
       .string({
-        required_error: 'Password is required',
-        invalid_type_error: 'Password must be a string',
+        required_error: 'Title is required',
+        invalid_type_error: 'Title must be a string',
       })
       .min(2, { message: 'Must be 2 or more characters long' })
       .max(24, { message: 'Must be 24 or less characters long' }),

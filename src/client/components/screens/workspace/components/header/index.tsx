@@ -4,26 +4,43 @@ import { StyledFunctionalButton } from '../../workspace.styled'
 import { faTrash, faGears } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import RemoveDialog from '../dialog/remove'
+import UpdateWorkspaceDialog from '../dialog/update-workspace'
+import { useWorkspaceValidator } from '../dialog/validator'
 
 interface IWorkspaceHeader {
   title: string
   date: number
-  onEdit: () => void
+  onEdit: (data: any) => void
   onRemove: () => void
 }
 
 const WorkspaceHeader: FC<IWorkspaceHeader> = (props) => {
   const { title, date, onEdit, onRemove } = props
   const [isRemoveOpen, setIsRemoveOpen] = useState(false)
+  const [isUpdateOpen, setIsUpdateOpen] = useState(false)
+
+  const { register, handleSubmit, errors } = useWorkspaceValidator()
 
   const handleRemoveClick = (e: MouseEvent) => {
     e.preventDefault()
     setIsRemoveOpen(true)
   }
 
+  const handleUpdateClick = (e: MouseEvent) => {
+    e.preventDefault()
+    setIsUpdateOpen(true)
+  }
+
   const handleConfirmRemove = () => {
     setIsRemoveOpen(false)
     onRemove()
+  }
+
+  const handleConfirmUpdate = (data) => {
+    //console.log(data)
+    setIsUpdateOpen(false)
+    onEdit(data)
+    //onRemove()
   }
 
   return (
@@ -38,7 +55,7 @@ const WorkspaceHeader: FC<IWorkspaceHeader> = (props) => {
           </span>
         </div>
         <div className="pr-4 flex flex-row gap-2">
-          <StyledFunctionalButton onClick={onEdit}>
+          <StyledFunctionalButton onClick={handleUpdateClick}>
             <FontAwesomeIcon icon={faGears} />
             <span className="pl-2">edit workspace</span>
           </StyledFunctionalButton>
@@ -53,6 +70,16 @@ const WorkspaceHeader: FC<IWorkspaceHeader> = (props) => {
         isOpen={isRemoveOpen}
         setIsOpen={setIsRemoveOpen}
         onRemove={handleConfirmRemove}
+      />
+      <UpdateWorkspaceDialog
+        title="update workspace"
+        isOpen={isUpdateOpen}
+        setIsOpen={setIsUpdateOpen}
+        submitHandler={handleConfirmUpdate}
+        register={register}
+        handleSubmit={handleSubmit}
+        errors={errors}
+        value={title}
       />
     </>
   )

@@ -86,8 +86,13 @@ const Workspace: FC<IWorkspaceProps> = (props) => {
     trigger()
   }
 
-  const handleEditWorkspace = () => {
+  const handleEditWorkspace = (data) => {
     console.log('handleEditWorkspace')
+    const editWorkspacePayload = {
+      title: data.title,
+      id,
+    }
+    console.log(editWorkspacePayload)
   }
 
   const handleRemoveWorkspace = () => {
