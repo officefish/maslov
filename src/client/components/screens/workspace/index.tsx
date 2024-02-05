@@ -1,7 +1,7 @@
 import { FC, MouseEvent, useEffect, useState } from 'react'
 
 import { useUpsetWidgetValidator } from './components/dialog/validator'
-//import NewWorkspaceDialog from './components/dialog'
+
 import {
   useNewWidget,
   useWorkspaceDataSWR,
@@ -9,8 +9,7 @@ import {
 import { StyledButtonWidget } from './workspace.styled'
 import WidgetList from './components/grid/widget'
 import UpsetWidgetDialog from './components/dialog/upset-widget'
-//import WorkspacesListGrid from './components/grid'
-//import { useNewWorkspace } from '@/client/services/workspace.service'
+import { CoreStock } from '@/client/models/exchange/alpha-vintage.types'
 
 export interface IWorkspaceProps {
   id: string
@@ -29,7 +28,7 @@ const Workspace: FC<IWorkspaceProps> = (props) => {
     setIsUpsetWidgetOpen(true)
   }
 
-  const { onSubmit, serverError, data: newWidgetResponse } = useNewWidget() // TODO: also need to process serverError
+  const { onSubmit, serverError, data: newWidgetResponse } = useNewWidget()
 
   useEffect(() => {
     if (!isValid) {
@@ -44,7 +43,7 @@ const Workspace: FC<IWorkspaceProps> = (props) => {
       console.log(serverError)
     }
     if (newWidgetResponse) {
-      console.log(newWidgetResponse)
+      //console.log(newWidgetResponse)
       if (newWidgetResponse?.statusCode === 201) {
         setIsValid(false)
         setIsUpsetWidgetOpen(false)
@@ -65,6 +64,10 @@ const Workspace: FC<IWorkspaceProps> = (props) => {
     onSubmit(responseData)
   }
 
+  const onWidgetRemove = () => {
+    trigger()
+  }
+
   return (
     <>
       <div>
@@ -76,7 +79,10 @@ const Workspace: FC<IWorkspaceProps> = (props) => {
         </span>
       </div>
       <div className="w-full">
-        <WidgetList widgets={workspaceData?.widgets} />
+        <WidgetList
+          onWidgetRemove={onWidgetRemove}
+          widgets={workspaceData?.widgets}
+        />
         <StyledButtonWidget onClick={showUpsetWidgetModal}>
           New widget
         </StyledButtonWidget>
@@ -89,6 +95,8 @@ const Workspace: FC<IWorkspaceProps> = (props) => {
         isOpen={isUpsetWidgetOpen}
         setIsOpen={setIsUpsetWidgetOpen}
         submitHandler={onSubmitMiddleware}
+        symbol=""
+        core={CoreStock.DAILY}
       />
       {/* <h1 className="text-base-content dark:text-base-content-dark text-lg">
         {id}

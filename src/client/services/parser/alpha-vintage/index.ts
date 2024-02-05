@@ -25,7 +25,7 @@ function parseData(data: any): ParseResponse {
     return { metadata: null, slots: null, error: { message: data.message } }
   }
   const rawData = data.data
-  console.log(rawData)
+  //console.log(rawData)
   const keys = Object.keys(rawData)
   const metadataKey = keys[0]
   const serieKey = keys[1]

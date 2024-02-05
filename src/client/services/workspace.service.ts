@@ -126,4 +126,5 @@ export const useNewWidget = () => useHook_POST_RawData({ route: 'widget' })
 export const useUpdateWidget = () =>
   useHook_POST_RawData({ route: 'widget/update' })
 
-// export const useSignUp = () => useHook_POST_RawData({ route: 'sign-up' })
+export const useDeleteWidget = () =>
+  useHook_POST_RawData({ route: 'widget/delete' })

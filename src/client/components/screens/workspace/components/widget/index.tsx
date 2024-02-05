@@ -1,4 +1,5 @@
 import {
+  useDeleteWidget,
   useUpdateWidget,
   //useProviderDataSWR,
   useWidgetDataSWR,
@@ -17,6 +18,7 @@ import { CoreStock } from '@/client/models/exchange/alpha-vintage.types'
 interface IWidget {
   workspaceId?: string
   id: string
+  onRemove: () => void
 }
 
 import { ViewMode } from './types'
@@ -41,7 +43,7 @@ import WidgetHeader from './header'
 // ] satisfies ISeries[]
 
 const Widget: FC<IWidget> = (props) => {
-  const { id } = props
+  const { id, onRemove } = props
 
   const { widgetData, trigger, error } = useWidgetDataSWR(id)
   const [isWidgetDataValid, setIsWidgetDataValid] = useState(false)
@@ -68,6 +70,18 @@ const Widget: FC<IWidget> = (props) => {
     serverError: updateWidgetServerError,
     data: updateWidgetResponse,
   } = useUpdateWidget()
+
+  const {
+    onSubmit: onSubmitDelete,
+    serverError: deleteServerError,
+    data: removeWidgetResponse,
+  } = useDeleteWidget()
+
+  const handleDeleteWidget = () => {
+    const responseData = { id }
+    setIsLoading(true)
+    onSubmitDelete(responseData)
+  }
 
   useEffect(() => {
     if (!isWidgetDataValid) {
@@ -117,6 +131,17 @@ const Widget: FC<IWidget> = (props) => {
 
     if (updateWidgetServerError) {
       console.log(updateWidgetServerError)
+      setIsLoading(false)
+    }
+
+    if (deleteServerError) {
+      console.log(deleteServerError)
+      setIsLoading(false)
+    }
+
+    if (removeWidgetResponse) {
+      console.log(removeWidgetResponse)
+      onRemove()
     }
   }, [
     widgetData,
@@ -125,8 +150,9 @@ const Widget: FC<IWidget> = (props) => {
     isWidgetDataValid,
     updateWidgetResponse,
     updateWidgetServerError,
-    //widgetMetadata,
-    //symbol,
+    deleteServerError,
+    removeWidgetResponse,
+    onRemove,
   ])
 
   const [isUpsetWidgetOpen, setIsUpsetWidgetOpen] = useState(false)
@@ -153,10 +179,6 @@ const Widget: FC<IWidget> = (props) => {
     onSubmit(responseData)
   }
 
-  const onWidgetRemove = () => {
-    console.log('onWidgetRemove')
-  }
-
   return (
     <>
       <div className="w-full md:w-[80%] card card-normal bg-base-300 dark:bg-base-300-dark shadow-xl flex flex-col items-center p-4">
@@ -169,7 +191,7 @@ const Widget: FC<IWidget> = (props) => {
         </div> */}
         <WidgetHeader
           title="Alpha-Vintage provider"
-          onRemove={onWidgetRemove}
+          onRemove={handleDeleteWidget}
         />
         <div className="flex flex-row justify-between w-full h-16 items-center">
           <div>
