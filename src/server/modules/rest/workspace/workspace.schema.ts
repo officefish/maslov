@@ -31,7 +31,13 @@ const DeleteWorkspaceSchema = z.object({
   ...id,
 })
 
+const UpdateWorkspaceSchema = z.object({
+  ...id,
+  ...title,
+})
+
 export class CreateWorkspaceDto extends createZodDto(CreateWorkspaceSchema) {}
 export class GetWorkspaceDto extends createZodDto(GetWorkspaceSchema) {}
 export class CreateWidgetDto extends createZodDto(CreateWidgetSchema) {}
 export class DeleteWorkspaceDto extends createZodDto(DeleteWorkspaceSchema) {}
+export class UpdateWorkspaceDto extends createZodDto(UpdateWorkspaceSchema) {}

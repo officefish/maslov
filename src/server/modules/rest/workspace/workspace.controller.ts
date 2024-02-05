@@ -28,6 +28,7 @@ import {
   CreateWidgetDto,
   CreateWorkspaceDto,
   DeleteWorkspaceDto,
+  UpdateWorkspaceDto,
 } from './workspace.schema'
 
 @ApiTags('workspace')
@@ -213,7 +214,7 @@ export class WorkspaceController {
 
   @UseGuards(AuthGuard)
   @Post('/delete')
-  async removeWidget(
+  async deleteWorkspace(
     @Req() request: FastifyRequest,
     @Res() reply: FastifyReply,
     @Body() credentials: DeleteWorkspaceDto,
@@ -242,6 +243,41 @@ export class WorkspaceController {
     return reply.code(201).send({
       statusCode: 201,
       message: 'Workspace success deleted',
+    })
+  }
+
+  @UseGuards(AuthGuard)
+  @Post('/update')
+  async updateWorkspace(
+    @Req() request: FastifyRequest,
+    @Res() reply: FastifyReply,
+    @Body() credentials: UpdateWorkspaceDto,
+  ) {
+    const { id, title } = credentials
+
+    const userId = request['userId']
+    const user = await this.userService.user({ id: userId })
+
+    if (!user) {
+      return reply
+        .code(401)
+        .send({ statusCode: 401, message: 'User not found' })
+    }
+
+    const where = { id }
+    const data = { title }
+    const workspace = await this.service.updateWorkspace({ where, data })
+
+    if (!workspace) {
+      return reply.code(403).send({
+        statusCode: 403,
+        message: 'Bad request. Database error with workspace update',
+      })
+    }
+
+    return reply.code(201).send({
+      statusCode: 201,
+      message: 'Workspace success updated.',
     })
   }
 }
