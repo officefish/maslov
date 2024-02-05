@@ -3,6 +3,7 @@ import { FC, MouseEvent, useState } from 'react'
 import { faTrash } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import RemoveWidgetDialog from '../dialog/remove-widget'
+import { StyledFunctionalButton } from '../../workspace.styled'
 
 interface IWidgetHeader {
   title: string
@@ -24,15 +25,12 @@ const WidgetHeader: FC<IWidgetHeader> = ({ title, onRemove }) => {
 
   return (
     <>
-      <div className="w-full justify-end text-sm text-info/50 dark:text-info-dark/50 flex flex-row gap-4">
+      <div className="w-full justify-end text-sm text-info dark:text-info-dark/50 flex flex-row gap-4">
         {title}
-        <button
-          className="btn btn-xs btn-outline btn-info opacity-50 hover:opacity-100 btn-ghost"
-          onClick={handleClick}
-        >
+        <StyledFunctionalButton onClick={handleClick}>
           <FontAwesomeIcon icon={faTrash} />
           <span className="pl-2">remove widget</span>
-        </button>
+        </StyledFunctionalButton>
       </div>
       <RemoveWidgetDialog
         title="remove widget"

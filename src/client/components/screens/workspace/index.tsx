@@ -10,6 +10,7 @@ import { StyledButtonWidget } from './workspace.styled'
 import WidgetList from './components/grid/widget'
 import UpsetWidgetDialog from './components/dialog/upset-widget'
 import { CoreStock } from '@/client/models/exchange/alpha-vintage.types'
+import WorkspaceHeader from './components/header'
 
 export interface IWorkspaceProps {
   id: string
@@ -68,16 +69,22 @@ const Workspace: FC<IWorkspaceProps> = (props) => {
     trigger()
   }
 
+  const handleEditWorkspace = () => {
+    console.log('handleEditWorkspace')
+  }
+
+  const handleRemoveWorkspace = () => {
+    console.log('handleRemoveWorkspace')
+  }
+
   return (
     <>
-      <div>
-        <span className="text-base-content dark:text-base-content-dark">
-          {workspaceData?.title}
-        </span>
-        <span className="text-base-content dark:text-base-content-dark">
-          {workspaceData?.date}
-        </span>
-      </div>
+      <WorkspaceHeader
+        title={workspaceData?.title}
+        date={workspaceData?.date}
+        onEdit={handleEditWorkspace}
+        onRemove={handleRemoveWorkspace}
+      />
       <div className="w-full">
         <WidgetList
           onWidgetRemove={onWidgetRemove}

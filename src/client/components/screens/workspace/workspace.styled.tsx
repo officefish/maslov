@@ -82,3 +82,7 @@ text-base-content
 dark:bg-base-200-dark 
 dark:text-base-content-dark
 `
+
+export const StyledFunctionalButton = tw.button`
+btn btn-xs btn-outline btn-info dark:opacity-50 hover:opacity-100 btn-ghost
+`
