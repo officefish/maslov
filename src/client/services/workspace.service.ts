@@ -151,3 +151,6 @@ export const useDeleteWorkspace = () =>
     route: 'workspace/delete',
     redirect: 'workspaces',
   })
+
+export const useUpdateWorkspace = () =>
+  useHook_POST_RawData({ route: 'workspace/update' })

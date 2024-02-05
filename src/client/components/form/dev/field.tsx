@@ -1,4 +1,4 @@
-import { FC } from 'react'
+import { FC, useState } from 'react'
 import { FormFieldProps } from '@client/utilities/form.types'
 
 import {
@@ -19,6 +19,10 @@ const FormField: FC<FormFieldProps> = ({
   errors,
 }) => {
   const tag = title.toLowerCase()
+  const [fieldValue, setFieldValue] = useState(value)
+  const handleChange = (e) => {
+    setFieldValue(e.target.value)
+  }
   return (
     <DevFormField>
       <DevFormLabel htmlFor={tag}>
@@ -28,7 +32,8 @@ const FormField: FC<FormFieldProps> = ({
         {...register(tag)}
         id={tag}
         type="text"
-        value={value}
+        value={fieldValue}
+        onChange={handleChange}
         placeholder={placeholder ? placeholder : `valid ${tag}`}
         className={`
             ${errors[tag] && 'invalid'}

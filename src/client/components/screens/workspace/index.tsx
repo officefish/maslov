@@ -5,6 +5,7 @@ import { useUpsetWidgetValidator } from './components/dialog/validator'
 import {
   useDeleteWorkspace,
   useNewWidget,
+  useUpdateWorkspace,
   useWorkspaceDataSWR,
 } from '@/client/services/workspace.service'
 import { StyledButtonWidget } from './workspace.styled'
@@ -35,6 +36,12 @@ const Workspace: FC<IWorkspaceProps> = (props) => {
   const { onSubmit: onRemoveSubmit, serverError: removeServerError } =
     useDeleteWorkspace()
 
+  const {
+    onSubmit: onUpdateSubmit,
+    serverError: updateServerError,
+    data: updateWorkspaceResonse,
+  } = useUpdateWorkspace()
+
   useEffect(() => {
     if (!isValid) {
       trigger()
@@ -52,11 +59,19 @@ const Workspace: FC<IWorkspaceProps> = (props) => {
       console.log(removeServerError)
     }
 
+    if (updateServerError) {
+      console.log(updateServerError)
+    }
+
     if (newWidgetResponse) {
-      //console.log(newWidgetResponse)
       if (newWidgetResponse?.statusCode === 201) {
         setIsValid(false)
         setIsUpsetWidgetOpen(false)
+      }
+    }
+    if (updateWorkspaceResonse) {
+      if (updateWorkspaceResonse?.statusCode === 201) {
+        setIsValid(false)
       }
     }
   }, [
@@ -66,7 +81,9 @@ const Workspace: FC<IWorkspaceProps> = (props) => {
     setIsValid,
     serverError,
     removeServerError,
+    updateServerError,
     newWidgetResponse,
+    updateWorkspaceResonse,
   ])
 
   const onSubmitMiddleware = (middlewareData) => {
@@ -92,7 +109,7 @@ const Workspace: FC<IWorkspaceProps> = (props) => {
       title: data.title,
       id,
     }
-    console.log(editWorkspacePayload)
+    onUpdateSubmit(editWorkspacePayload)
   }
 
   const handleRemoveWorkspace = () => {
