@@ -23,7 +23,7 @@ interface RemoveWidgetDialogProp {
   onRemove: () => void
 }
 
-const RemoveWidgetDialog: FC<RemoveWidgetDialogProp> = (props) => {
+const RemoveDialog: FC<RemoveWidgetDialogProp> = (props) => {
   const modalRef = useRef<HTMLDialogElement>(null)
 
   const { setIsOpen, isOpen, title, onRemove } = props
@@ -61,7 +61,7 @@ const RemoveWidgetDialog: FC<RemoveWidgetDialogProp> = (props) => {
             <StyledFormBody>
               <DevFormFieldWarning>
                 <WarningSVG />
-                Are use sure you want to remove this widget?
+                Are use sure you want to remove this block?
               </DevFormFieldWarning>
               <div className="h-[30%] m-8 flex">
                 <StyledReadyInput type="submit" value={title} />
@@ -76,4 +76,4 @@ const RemoveWidgetDialog: FC<RemoveWidgetDialogProp> = (props) => {
     </StyledDialog>
   )
 }
-export default RemoveWidgetDialog
+export default RemoveDialog
