@@ -51,6 +51,9 @@ export class WorkspaceService {
   async deleteWorkspace(
     where: Prisma.WorkspaceWhereUniqueInput,
   ): Promise<Workspace> {
+    await this.prisma.widget.deleteMany({
+      where: { workspaceId: where.id },
+    })
     return this.prisma.workspace.delete({
       where,
     })

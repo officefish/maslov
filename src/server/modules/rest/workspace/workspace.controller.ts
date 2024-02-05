@@ -24,7 +24,11 @@ import { AuthGuard } from '../auth/auth.guard'
 
 import { FastifyRequest, FastifyReply } from 'fastify'
 import { UserService } from '../user/user.service'
-import { CreateWidgetDto, CreateWorkspaceDto } from './workspace.schema'
+import {
+  CreateWidgetDto,
+  CreateWorkspaceDto,
+  DeleteWorkspaceDto,
+} from './workspace.schema'
 
 @ApiTags('workspace')
 @Controller('workspace')
@@ -158,11 +162,6 @@ export class WorkspaceController {
     })
   }
 
-  // @Delete('post/:id')
-  // async deletePost(@Param('id') id: string): Promise<PostModel> {
-  //   return this.service.deletePost({ id: Number(id) })
-  // }
-
   @UseGuards(AuthGuard)
   @Post('/:id/widget')
   async createWidget(
@@ -209,6 +208,40 @@ export class WorkspaceController {
       statusCode: 201,
       message: 'Widget creation done',
       id: widget.id,
+    })
+  }
+
+  @UseGuards(AuthGuard)
+  @Post('/delete')
+  async removeWidget(
+    @Req() request: FastifyRequest,
+    @Res() reply: FastifyReply,
+    @Body() credentials: DeleteWorkspaceDto,
+  ) {
+    const { id } = credentials
+
+    const userId = request['userId']
+    const user = await this.userService.user({ id: userId })
+
+    if (!user) {
+      return reply
+        .code(401)
+        .send({ statusCode: 401, message: 'User not found' })
+    }
+
+    const where = { id }
+    const workspace = await this.service.deleteWorkspace(where)
+
+    if (!workspace) {
+      return reply.code(403).send({
+        statusCode: 403,
+        message: 'Bad request. Database error with workspace delete',
+      })
+    }
+
+    return reply.code(201).send({
+      statusCode: 201,
+      message: 'Workspace success deleted',
     })
   }
 }
