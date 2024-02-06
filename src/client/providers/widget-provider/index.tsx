@@ -16,7 +16,7 @@ const createWidgetStore = () =>
     startDate: new Date('August 19, 1911 23:15:30'),
     endDate: new Date(),
     setInterval: (startDate: Date, endDate: Date) =>
-      set(() => ({ startDate, endDate })),
+      set(() => ({ startDate: { ...startDate }, endDate: { ...endDate } })),
     //getIntervalSlots: () => get(() => ({ slots })),
   }))
 
