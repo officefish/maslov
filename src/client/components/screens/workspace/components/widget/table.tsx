@@ -1,16 +1,24 @@
-import { FC } from 'react'
+import { FC, useEffect, useState } from 'react'
 //import { ISlot } from '@/client/models/exchange.types'
 import WidgetTableItem from './item'
-import { UserSerie } from 'react-charts'
 import { ISlot } from '@/client/models/exchange/types'
+import { useWidgetStore } from '@/client/providers/widget-provider'
 
 interface IWidgetTable {
-  data: UserSerie<unknown>[]
+  //data: UserSerie<unknown>[]
 }
-const WidgetTable: FC<IWidgetTable> = (props) => {
-  const { data } = props
 
-  const sliced = data[0].data.slice(0, 24)
+const WidgetTable: FC<IWidgetTable> = () => {
+  const { slots } = useWidgetStore()
+
+  const [sliced, setSliced] = useState<ISlot[]>(null)
+
+  useEffect(() => {
+    if (!slots) return
+    if (!slots[0]) return
+    if (!slots[0].data) return
+    setSliced(slots[0].data.slice(0, 24))
+  }, [slots])
 
   return (
     <div className="overflow-x-auto pt-4">

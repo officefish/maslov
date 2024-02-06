@@ -2,7 +2,7 @@ import { FC, PropsWithChildren, useRef, useContext } from 'react'
 import { createStore, useStore } from 'zustand'
 import { createContext } from 'react' // from 'zustand/context'
 import { IWidgetState, IWidgetActions } from './types'
-import { IMetadata, ISlot } from '@client/models/workspace.types'
+import { IMetadata, ISlot } from '@/client/models/exchange/alpha-vintage.types'
 
 type IWidgetStore = IWidgetState & IWidgetActions
 
@@ -12,7 +12,7 @@ const createWidgetStore = () =>
     setMetadata: (newMetadata: IMetadata) =>
       set(() => ({ metadata: { ...newMetadata } })),
     slots: [],
-    setSlots: (newSlots: ISlot[]) => set(() => ({ slots: newSlots })),
+    setSlots: (slots: ISlot[]) => set(() => ({ slots: [...slots] })),
     startDate: new Date('August 19, 1911 23:15:30'),
     endDate: new Date(),
     setInterval: (startDate: Date, endDate: Date) =>
@@ -23,7 +23,7 @@ const createWidgetStore = () =>
 type WidgetStore = ReturnType<typeof createWidgetStore>
 const WidgetContext = createContext<WidgetStore | null>(null)
 
-export const useUserProfileStore = () => {
+export const useWidgetStore = () => {
   const api = useContext(WidgetContext)
   return {
     metadata: useStore(api, (state) => state.metadata),

@@ -1,5 +1,6 @@
 import { FC } from 'react'
 import Widget from '../../widget'
+import { WidgetProvider } from '@/client/providers/widget-provider'
 
 interface IWidget {
   workspaceId: string
@@ -9,7 +10,6 @@ interface IWidget {
 interface IWidgetListGrid {
   widgets: IWidget[]
   onWidgetRemove: () => void
-  //onClick: (e: MouseEvent<HTMLButtonElement>) => void
 }
 
 const WidgetList: FC<IWidgetListGrid> = (props) => {
@@ -18,7 +18,9 @@ const WidgetList: FC<IWidgetListGrid> = (props) => {
   return (
     <div className="w-full flex flex-col items-center">
       {widgets?.map((item, i) => (
-        <Widget key={i} id={item.id} onRemove={onWidgetRemove} />
+        <WidgetProvider key={i}>
+          <Widget id={item.id} onRemove={onWidgetRemove} />
+        </WidgetProvider>
       ))}
     </div>
   )

@@ -1,12 +1,14 @@
+import { UserSerie } from 'react-charts'
+
 export enum CoreStock {
   DAILY = 'DAILY',
   WEEKLY = 'WEEKLY',
   MONTHLY = 'MONTHLY',
 }
 
-
-export interface Metadata {
+export interface IMetadata {
   symbol: string
   api_function: string
 }
-  
+
+export type ISlot = UserSerie<unknown>

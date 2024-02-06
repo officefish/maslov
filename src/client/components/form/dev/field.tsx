@@ -19,7 +19,7 @@ const FormField: FC<FormFieldProps> = ({
   errors,
 }) => {
   const tag = title.toLowerCase()
-  const [fieldValue, setFieldValue] = useState(value)
+  const [fieldValue, setFieldValue] = useState(value || '')
   const handleChange = (e) => {
     setFieldValue(e.target.value)
   }

@@ -86,3 +86,12 @@ dark:text-base-content-dark
 export const StyledFunctionalButton = tw.button`
 btn btn-xs btn-outline btn-info dark:opacity-50 hover:opacity-100 btn-ghost
 `
+export const StyledWidgetMain = tw.div`
+w-full 
+md:w-[80%] 
+card card-normal 
+bg-base-300 dark:bg-base-300-dark 
+shadow-xl 
+flex flex-col items-center 
+p-4
+`
