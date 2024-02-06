@@ -7,6 +7,7 @@ import { StyledButtonWidget } from '../../workspace.styled'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useWidgetStore } from '@/client/providers/widget-provider'
 import { ViewMode } from './types'
+import IntervalPicker from './interval/picker'
 
 interface IWidgetNavigation {
   mode: ViewMode
@@ -37,7 +38,10 @@ const WidgetNavigation: FC<IWidgetNavigation> = (props) => {
           )}
         </StyledButtonWidget>
       </div>
-      <WidgetTabs mode={mode} setMode={setMode} />
+      <div className="flex flex-row h-full items-center">
+        <IntervalPicker />
+        <WidgetTabs mode={mode} setMode={setMode} />
+      </div>
     </div>
   )
 }
