@@ -1,24 +1,24 @@
 import { FC, useEffect, useState } from 'react'
 //import { ISlot } from '@/client/models/exchange.types'
 import WidgetTableItem from './item'
-import { ISlot } from '@/client/models/exchange/types'
 import { useWidgetStore } from '@/client/providers/widget-provider'
+import { ISlot } from '@/client/models/exchange/alpha-vintage.types'
 
 interface IWidgetTable {
   //data: UserSerie<unknown>[]
 }
 
 const WidgetTable: FC<IWidgetTable> = () => {
-  const { slots } = useWidgetStore()
+  const { series } = useWidgetStore()
 
   const [sliced, setSliced] = useState<ISlot[]>(null)
 
   useEffect(() => {
-    if (!slots) return
-    if (!slots[0]) return
-    if (!slots[0].data) return
-    setSliced(slots[0].data.slice(0, 24))
-  }, [slots])
+    if (!series) return
+    if (!series[0]) return
+    if (!series[0].data) return
+    setSliced(series[0].data.slice(0, 24))
+  }, [series])
 
   return (
     <div className="overflow-x-auto pt-4">

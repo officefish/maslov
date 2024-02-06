@@ -11,7 +11,7 @@ interface IWidgetCharts {
 }
 
 const WidgetCharts: FC<IWidgetCharts> = () => {
-  const { slots } = useWidgetStore()
+  const { series } = useWidgetStore()
   const primaryAxis = useMemo(
     () => ({
       getValue: (datum) => datum.primary ?? datum.date,
@@ -32,7 +32,7 @@ const WidgetCharts: FC<IWidgetCharts> = () => {
     <div className="w-full h-96">
       <Chart
         options={{
-          data: slots,
+          data: series,
           primaryAxis,
           secondaryAxes,
         }}

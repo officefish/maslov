@@ -6,6 +6,8 @@ interface IIntervalPicker {}
 const IntervalPicker: FC<IIntervalPicker> = () => {
   const { startDate, endDate, setInterval } = useWidgetStore()
 
+  console.log(startDate, endDate)
+
   const onStartDateChange = (e: ChangeEvent<HTMLInputElement>) => {
     e.preventDefault()
     const newStartDate = new Date(e.target.value)
@@ -28,7 +30,11 @@ const IntervalPicker: FC<IIntervalPicker> = () => {
       </label>
       <input
         type="date"
-        value={startDate.toISOString().split('T')[0]}
+        value={
+          startDate && startDate.toISOString
+            ? startDate.toISOString().split('T')[0]
+            : new Date('August 19, 1911 23:15:30').toISOString().split('T')[0]
+        }
         className="input-sm rounded-md dark:bg-base-100-dark dark:text-primary-dark"
         onChange={onStartDateChange}
       />
@@ -37,7 +43,11 @@ const IntervalPicker: FC<IIntervalPicker> = () => {
       </label>
       <input
         type="date"
-        value={endDate.toISOString().split('T')[0]}
+        value={
+          endDate && endDate.toISOString
+            ? endDate.toISOString().split('T')[0]
+            : new Date().toISOString().split('T')[0]
+        }
         className="input-sm rounded-md dark:bg-base-100-dark dark:text-primary-dark"
         onChange={onEndDateChange}
       />

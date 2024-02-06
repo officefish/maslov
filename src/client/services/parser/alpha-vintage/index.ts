@@ -7,22 +7,26 @@
 //   volume: number
 // }
 
-import { UserSerie } from 'react-charts'
-import { Metadata } from '@/client/models/exchange/alpha-vintage.types'
+//import { UserSerie } from 'react-charts'
+import {
+  IMetadata,
+  ISerie,
+  ISlot,
+} from '@/client/models/exchange/alpha-vintage.types'
 
 export interface ParserError {
   message: string
 }
 
 interface ParseResponse {
-  metadata: Metadata
-  slots: UserSerie<unknown>[]
+  metadata: IMetadata
+  series: ISerie[]
   error: ParserError
 }
 
 function parseData(data: any): ParseResponse {
   if (data.statusCode === 403) {
-    return { metadata: null, slots: null, error: { message: data.message } }
+    return { metadata: null, series: null, error: { message: data.message } }
   }
   const rawData = data.data
   //console.log(rawData)
@@ -40,7 +44,7 @@ function parseData(data: any): ParseResponse {
   const metadata = {
     symbol,
     api_function: informationFirstWord.toUpperCase(),
-  } satisfies Metadata
+  } satisfies IMetadata
 
   const seriesData = rawData[serieKey]
   const slots = Object.entries(seriesData).map(([date, values]) => ({
@@ -61,11 +65,37 @@ function parseData(data: any): ParseResponse {
 
   //return []
 
-  return { metadata, slots: [serie], error: null }
+  return { metadata, series: [serie], error: null }
 }
 
 export function parser(data: any): ParseResponse {
-  const { metadata, slots, error } = parseData(data)
+  const { metadata, series, error } = parseData(data)
   //console.log(slots)
-  return { metadata, slots, error }
+  return { metadata, series, error }
+}
+
+export function extractInterval(series: ISerie[]) {
+  const firstDate = series[0]?.data[0]?.date
+
+  let mostEarlyDate = firstDate
+  let mostLateDate = firstDate
+
+  const slots = series[0].data satisfies ISlot[]
+
+  for (let i = 1; i < slots.length; i++) {
+    const currentDate = slots[i].date
+
+    console.log(currentDate)
+
+    // Check for the most early date
+    if (currentDate < mostEarlyDate) {
+      mostEarlyDate = currentDate
+    }
+
+    // Check for the most late date
+    if (currentDate > mostLateDate) {
+      mostLateDate = currentDate
+    }
+  }
+  return { mostEarlyDate, mostLateDate }
 }

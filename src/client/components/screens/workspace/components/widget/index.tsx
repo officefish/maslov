@@ -6,7 +6,11 @@ import {
 import { FC, useState, useEffect } from 'react'
 
 import WidgetTable from './table'
-import { parser, ParserError } from '@/client/services/parser/alpha-vintage'
+import {
+  extractInterval,
+  parser,
+  ParserError,
+} from '@/client/services/parser/alpha-vintage'
 import { CoreStock } from '@/client/models/exchange/alpha-vintage.types'
 
 // <FontAwesomeIcon icon="fa-solid fa-square-root-variable" />
@@ -40,7 +44,12 @@ const Widget: FC<IWidget> = (props) => {
   //   dataType: 'time',
   // })
 
-  const { metadata: providerMetadata, setMetadata, setSlots } = useWidgetStore()
+  const {
+    metadata: providerMetadata,
+    setMetadata,
+    setSeries,
+    setInterval,
+  } = useWidgetStore()
   //setSlots(chartData)
 
   const [symbol, setSymbol] = useState(providerMetadata?.symbol)
@@ -113,15 +122,22 @@ const Widget: FC<IWidget> = (props) => {
     if (widgetData) {
       setIsLoading(true)
       fetchData().then((response) => {
-        const { metadata, slots, error } = parser(response)
+        const { metadata, series, error } = parser(response)
 
         setIsLoading(false)
 
         if (!error) {
           setMetadata(metadata)
           setSymbol(metadata.symbol)
-          setSlots(slots)
+          setSeries(series)
           setParserError(null)
+
+          const { mostEarlyDate, mostLateDate } = extractInterval(series)
+          // console.log('mostEarly: ', mostEarlyDate)
+          // console.log('mostLate: ', mostLateDate)
+          // console.log(mostEarlyDate.toISOString())
+          // console.log(mostLateDate.toISOString())
+          setInterval(mostEarlyDate, mostLateDate)
         } else {
           setParserError(error)
         }
@@ -149,7 +165,7 @@ const Widget: FC<IWidget> = (props) => {
   }, [
     widgetData,
     setMetadata,
-    setSlots,
+    setSeries,
     trigger,
     error,
     isWidgetDataValid,
@@ -157,6 +173,7 @@ const Widget: FC<IWidget> = (props) => {
     updateWidgetServerError,
     deleteServerError,
     removeWidgetResponse,
+    setInterval,
     onRemove,
   ])
 

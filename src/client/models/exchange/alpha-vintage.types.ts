@@ -11,4 +11,13 @@ export interface IMetadata {
   api_function: string
 }
 
-export type ISlot = UserSerie<unknown>
+export interface ISlot {
+  date: Date
+  open: number
+  close: number
+  low: number
+  high: number
+  volume: number
+}
+
+export type ISerie = UserSerie<ISlot>
