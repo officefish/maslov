@@ -173,6 +173,7 @@ const Widget: FC<IWidget> = (props) => {
     removeWidgetResponse,
     setInterval,
     onRemove,
+    setIntervalSeries,
   ])
 
   return (

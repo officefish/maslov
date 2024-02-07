@@ -21,3 +21,7 @@ export interface ISlot {
 }
 
 export type ISerie = UserSerie<ISlot>
+
+export interface ISlide {
+  slots: ISlot[]
+}

@@ -32,7 +32,7 @@ export const useWidgetStore = () => {
     setMetadata: useStore(api, (state) => state.setMetadata),
     series: useStore(api, (state) => state.series),
     setSeries: useStore(api, (state) => state.setSeries),
-    intervalSeies: useStore(api, (state) => state.intervalSeries),
+    intervalSeries: useStore(api, (state) => state.intervalSeries),
     setIntervalSeries: useStore(api, (state) => state.setIntervalSeries),
     startDate: useStore(api, (state) => state.startDate),
     endDate: useStore(api, (state) => state.endDate),

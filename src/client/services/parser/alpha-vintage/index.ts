@@ -12,6 +12,7 @@ import {
   IMetadata,
   ISerie,
   ISlot,
+  ISlide,
 } from '@/client/models/exchange/alpha-vintage.types'
 
 export interface ParserError {
@@ -117,4 +118,12 @@ export function spliceIntervalSeries(
   )
   const intervalSeries = [{ label: series[0].label, data: filteredSlots }]
   return intervalSeries
+}
+
+export function chunkSlots(slots: ISlot[], chunkSize: number): ISlide[] {
+  const resultArray = []
+  for (let i = 0; i < slots.length; i += chunkSize) {
+    resultArray.push({ slots: slots.slice(i, i + chunkSize) })
+  }
+  return resultArray
 }
