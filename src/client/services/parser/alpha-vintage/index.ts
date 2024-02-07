@@ -24,6 +24,8 @@ interface ParseResponse {
   error: ParserError
 }
 
+type SpliceResponse = ISerie[] | null
+
 function parseData(data: any): ParseResponse {
   if (data.statusCode === 403) {
     return { metadata: null, series: null, error: { message: data.message } }
@@ -85,8 +87,6 @@ export function extractInterval(series: ISerie[]) {
   for (let i = 1; i < slots.length; i++) {
     const currentDate = slots[i].date
 
-    console.log(currentDate)
-
     // Check for the most early date
     if (currentDate < mostEarlyDate) {
       mostEarlyDate = currentDate
@@ -98,4 +98,23 @@ export function extractInterval(series: ISerie[]) {
     }
   }
   return { mostEarlyDate, mostLateDate }
+}
+
+export function spliceIntervalSeries(
+  series: ISerie[],
+  startDate: Date,
+  endDate: Date,
+): SpliceResponse {
+  if (!series) return null
+  if (!series.length) return null
+  const slots = series[0].data satisfies ISlot[]
+  if (!slots) return
+  if (!slots.length) return
+  //console.log(series)
+  //console.log(startDate, endDate)
+  const filteredSlots = slots.filter(
+    (item) => item.date > startDate && item.date < endDate,
+  )
+  const intervalSeries = [{ label: series[0].label, data: filteredSlots }]
+  return intervalSeries
 }

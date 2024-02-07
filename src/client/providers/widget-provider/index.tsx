@@ -12,12 +12,14 @@ const createWidgetStore = () =>
     setMetadata: (newMetadata: IMetadata) =>
       set(() => ({ metadata: { ...newMetadata } })),
     series: [],
+    intervalSeries: [],
     setSeries: (series: ISerie[]) => set(() => ({ series: [...series] })),
+    setIntervalSeries: (intervalSeries: ISerie[]) =>
+      set(() => ({ intervalSeries: [...intervalSeries] })),
     startDate: new Date('August 19, 1911 23:15:30'),
     endDate: new Date(),
     setInterval: (startDate: Date, endDate: Date) =>
       set(() => ({ startDate, endDate })),
-    //getIntervalSlots: () => get(() => ({ slots })),
   }))
 
 type WidgetStore = ReturnType<typeof createWidgetStore>
@@ -30,6 +32,8 @@ export const useWidgetStore = () => {
     setMetadata: useStore(api, (state) => state.setMetadata),
     series: useStore(api, (state) => state.series),
     setSeries: useStore(api, (state) => state.setSeries),
+    intervalSeies: useStore(api, (state) => state.intervalSeries),
+    setIntervalSeries: useStore(api, (state) => state.setIntervalSeries),
     startDate: useStore(api, (state) => state.startDate),
     endDate: useStore(api, (state) => state.endDate),
     setInterval: useStore(api, (state) => state.setInterval),

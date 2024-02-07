@@ -95,3 +95,18 @@ shadow-xl
 flex flex-col items-center 
 p-4
 `
+
+export const StyledDatePickerLabel = tw.label`
+pt-1 
+label-text 
+text-end 
+text-primary/70 
+dark:text-primary-dark/70
+`
+export const StyledDatePickerInput = tw.input`
+input-sm rounded-md 
+bg-base-100
+dark:bg-base-100-dark 
+text-primary
+dark:text-primary-dark
+`

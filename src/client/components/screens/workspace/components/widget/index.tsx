@@ -49,6 +49,7 @@ const Widget: FC<IWidget> = (props) => {
     setMetadata,
     setSeries,
     setInterval,
+    setIntervalSeries,
   } = useWidgetStore()
   //setSlots(chartData)
 
@@ -133,11 +134,8 @@ const Widget: FC<IWidget> = (props) => {
           setParserError(null)
 
           const { mostEarlyDate, mostLateDate } = extractInterval(series)
-          // console.log('mostEarly: ', mostEarlyDate)
-          // console.log('mostLate: ', mostLateDate)
-          // console.log(mostEarlyDate.toISOString())
-          // console.log(mostLateDate.toISOString())
           setInterval(mostEarlyDate, mostLateDate)
+          setIntervalSeries(series)
         } else {
           setParserError(error)
         }

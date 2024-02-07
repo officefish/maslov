@@ -9,16 +9,16 @@ interface IWidgetTable {
 }
 
 const WidgetTable: FC<IWidgetTable> = () => {
-  const { series } = useWidgetStore()
+  const { intervalSeies } = useWidgetStore()
 
   const [sliced, setSliced] = useState<ISlot[]>(null)
 
   useEffect(() => {
-    if (!series) return
-    if (!series[0]) return
-    if (!series[0].data) return
-    setSliced(series[0].data.slice(0, 24))
-  }, [series])
+    if (!intervalSeies) return
+    if (!intervalSeies[0]) return
+    if (!intervalSeies[0].data) return
+    setSliced(intervalSeies[0].data.slice(0, 24))
+  }, [intervalSeies])
 
   return (
     <div className="overflow-x-auto pt-4">
