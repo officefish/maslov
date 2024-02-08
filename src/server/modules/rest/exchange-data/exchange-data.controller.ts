@@ -15,7 +15,7 @@ import { ExchangeDataService } from './exchange-data.service'
 //import { ExchangeSegment as SegmentModel } from '@prisma/client'
 import { FastifyRequest, FastifyReply } from 'fastify'
 
-import { AuthGuard } from '@modules/rest/auth/auth.guard'
+import { AdminGuard } from '@modules/rest/auth/auth.guard'
 
 import {
   //ApiCreatedResponse,
@@ -48,7 +48,7 @@ export class ExchangeDataController {
   //   return this.service.post({ id: Number(id) })
   // }
 
-  @UseGuards(AuthGuard)
+  @UseGuards(AdminGuard)
   @Get('segment/many')
   async getSegments(
     @Req() request: FastifyRequest,

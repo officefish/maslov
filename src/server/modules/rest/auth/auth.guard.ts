@@ -10,14 +10,16 @@ import { AccessoryService } from '@modules/accessory/accessory.service'
 import { UserService } from '@modules/rest/user/user.service'
 import { FastifyRequest } from 'fastify'
 
+import { Role } from '@prisma/client'
+
 //import { jwtConstants } from './constants'
 //import { Request } from 'express'
 
 @Injectable()
 export class AuthGuard implements CanActivate {
   constructor(
-    private accessory: AccessoryService,
-    private userService: UserService,
+    protected accessory: AccessoryService,
+    protected userService: UserService,
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
@@ -97,5 +99,32 @@ export class AuthGuard implements CanActivate {
   private extractTokenFromBearer(request: FastifyRequest): string | undefined {
     const [type, token] = request.headers.authorization?.split(' ') ?? []
     return type === 'Bearer' ? token : undefined
+  }
+}
+
+@Injectable()
+export class AdminGuard extends AuthGuard implements CanActivate {
+  constructor(
+    protected accessory: AccessoryService,
+    protected userService: UserService,
+  ) {
+    super(accessory, userService)
+  }
+
+  async canActivate(context: ExecutionContext) {
+    const request = context.switchToHttp().getRequest()
+    const success = await super.canActivate(context)
+    if (!success) {
+      throw new UnauthorizedException()
+    }
+
+    const user = await this.userService.user({ id: request.userId })
+    const userRole = user.role
+    if (userRole !== Role.ADMIN) {
+      return false
+    }
+
+    // Basically if this guard is false then try the super.canActivate.  If its true then it would have returned already
+    return true
   }
 }

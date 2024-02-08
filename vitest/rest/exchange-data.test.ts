@@ -33,6 +33,7 @@ import {
   makeUserInputData,
   destroyUser,
 } from './user.generator'
+import { Role } from '@prisma/client'
 
 const jsonType = 'application/json; charset=utf-8'
 const API_PREFIX = '/api/v1'
@@ -101,7 +102,7 @@ describe('Exchange Data Service', () => {
     await destroyUser(userService, prisma, userData.email)
   })
 
-  test('Success (GET) segments list for authorized user', async () => {
+  test('Error (GET) segments list for not ADMIN role authorised user', async () => {
     const userData = generateNewUser()
 
     /* Sure user not exist in db */
@@ -122,6 +123,53 @@ describe('Exchange Data Service', () => {
 
     const token = json?.payload?.accessToken || undefined
     expect(token).toBeDefined()
+
+    const response = await app
+      .getHttpAdapter()
+      .getInstance()
+      .inject()
+      .get(`${API_PREFIX}/data/segment/many`)
+      .query({ provider: 'ALPHA_VINTAGE', symbol: 'IBM' })
+      .headers({ authorization: `Bearer ${token}` })
+
+    expect(response.statusCode).toBe(403)
+    expect(response.headers['content-type']).toBe(jsonType)
+    json = response.json()
+    expectTypeOf(json).toBeObject()
+    expect(json).haveOwnProperty('statusCode')
+    expect(json.statusCode).toBe(403)
+
+    await destroyUser(userService, prisma, userData.email)
+  })
+
+  test('Success (GET) segments list for ADMIN role authorised user', async () => {
+    const userData = generateNewUser()
+
+    /* Sure user not exist in db */
+    await checkUserNotExist(prisma, userData.email)
+
+    const registerResponse = await app
+      .getHttpAdapter()
+      .getInstance()
+      .inject()
+      .post(`${API_PREFIX}/auth/sign-up`)
+      .payload(userData)
+
+    expect(registerResponse.statusCode).toBe(201)
+    expect(registerResponse.headers['content-type']).toBe(jsonType)
+    let json = registerResponse.json()
+    expect(json).haveOwnProperty('payload')
+    expect(json.payload).haveOwnProperty('accessToken')
+
+    const token = json?.payload?.accessToken || undefined
+    expect(token).toBeDefined()
+
+    const id = json.payload?.id
+    /* update user with ADMIN role */
+    await prisma.user.update({
+      where: { id },
+      data: { role: Role.ADMIN },
+    })
 
     const response = await app
       .getHttpAdapter()
