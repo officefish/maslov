@@ -2,17 +2,20 @@ import {
   Controller,
   Get,
   //Param,
-  //Post,
-  //Body,
+  Post,
+  Body,
   Req,
   Res,
   Query,
+  UseGuards,
   //Put,
   //Delete
 } from '@nestjs/common'
 import { ExchangeDataService } from './exchange-data.service'
 //import { ExchangeSegment as SegmentModel } from '@prisma/client'
 import { FastifyRequest, FastifyReply } from 'fastify'
+
+import { AuthGuard } from '@modules/rest/auth/auth.guard'
 
 import {
   //ApiCreatedResponse,
@@ -29,6 +32,7 @@ import {
   AlphaVintageCoreDto,
   AlphaVintageDto,
   AlphaVintageMinDto,
+  CreateManySegmentsDto,
 } from './exchange-data.schema'
 
 @Controller('data')
@@ -44,15 +48,16 @@ export class ExchangeDataController {
   //   return this.service.post({ id: Number(id) })
   // }
 
-  @Get('segments')
+  @UseGuards(AuthGuard)
+  @Get('segment/many')
   async getSegments(
     @Req() request: FastifyRequest,
     @Res() reply: FastifyReply,
   ) {
-    const date = request['dateTime']
+    const symbol = request['symbol']
     const provider = request['provider']
     const segments = await this.database.segments({
-      date,
+      symbol,
       provider,
     })
     return segments
@@ -60,6 +65,18 @@ export class ExchangeDataController {
       : reply
           .code(201)
           .send({ statusCode: 201, message: 'No segments found', segments })
+  }
+
+  @Post('segment/many')
+  async createMany(
+    @Body() credentials: CreateManySegmentsDto,
+    @Req() request: FastifyRequest,
+    @Res() reply: FastifyReply,
+  ): Promise<object> {
+    const { segments } = credentials
+    console.log(segments)
+
+    return reply.code(201).send({ statusCode: 201, message: 'ok' })
   }
 
   @Get('alpha-vintage/intraday')

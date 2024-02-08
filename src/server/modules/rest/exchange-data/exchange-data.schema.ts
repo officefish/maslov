@@ -1,6 +1,9 @@
 import { createZodDto } from 'nestjs-zod'
 import { z } from 'nestjs-zod/z'
 
+import { Provider } from '@prisma/client'
+const providerEnum = z.nativeEnum(Provider)
+
 //const datatypes = ['json', 'scv']
 
 enum IntervalMinutes {
@@ -51,6 +54,22 @@ const AlphaVintageCoreSchema = z.object({
   datatype: z.nativeEnum(Datatype).optional(),
 })
 
+const SegmentSchema = z.object({
+  provider: providerEnum,
+  symbol: z.string(),
+  high: z.number(),
+  low: z.number(),
+  open: z.number(),
+  close: z.number(),
+  date: z.string().datetime(),
+})
+
+const SegmentListSchema = z.object({
+  segments: z.array(SegmentSchema),
+})
+
 export class AlphaVintageMinDto extends createZodDto(AlphaVintageMinSchema) {}
 export class AlphaVintageDto extends createZodDto(AlphaVintageSchema) {}
 export class AlphaVintageCoreDto extends createZodDto(AlphaVintageCoreSchema) {}
+
+export class CreateManySegmentsDto extends createZodDto(SegmentListSchema) {}
