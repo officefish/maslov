@@ -9,7 +9,7 @@ interface IWidgetTableItem {
 const WidgetTableSlide: FC<IWidgetTableItem> = (props) => {
   const { data } = props
 
-  console.log(data)
+  //console.log(data)
 
   return (
     <div className="w-full flex justify-center overflow-x-auto">

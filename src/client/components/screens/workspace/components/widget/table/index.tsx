@@ -34,7 +34,6 @@ const WidgetTable: FC<IWidgetTable> = () => {
 
     const newSlides = chunkSlots(slots, 25)
     setSlides(newSlides)
-    console.log(newSlides.length)
   }, [intervalSeries])
 
   return (
